@@ -6,575 +6,158 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="app-icon.svg">
 <meta name="apple-touch-fullscreen" content="yes">
-<title>MES 英语闪卡大全</title>
+<title>MES 英语闪卡 Pro</title>
 <style>
   :root {
-    --bg: #f0f2f5;
-    --card-bg: #fff;
-    --text: #1a1a2e;
-    --text2: #555;
-    --primary: #4361ee;
-    --primary-light: #eef0ff;
-    --success: #2ec4b6;
-    --danger: #e71d36;
-    --warning: #ff9f1c;
-    --border: #e0e0e0;
-    --shadow: 0 8px 30px rgba(0,0,0,0.12);
-    --radius: 20px;
-    --tag-bg: #f0f0f5;
-    --progress-bg: #e0e0e0;
-    --flip-speed: 0.6s;
+    --bg: #f0f2f5; --card-bg: #fff; --text: #1a1a2e; --text2: #555;
+    --primary: #4361ee; --primary-light: #eef0ff; --success: #2ec4b6;
+    --danger: #e71d36; --warning: #ff9f1c; --border: #e0e0e0;
+    --shadow: 0 8px 30px rgba(0,0,0,0.12); --radius: 20px;
+    --tag-bg: #f0f0f5; --progress-bg: #e0e0e0; --flip-speed: 0.6s;
   }
   .dark {
-    --bg: #0f0f23;
-    --card-bg: #1a1a3e;
-    --text: #e0e0ff;
-    --text2: #a0a0cc;
-    --primary: #6c7bff;
-    --primary-light: #1a1a4e;
-    --border: #2a2a5e;
-    --shadow: 0 8px 30px rgba(0,0,0,0.4);
-    --tag-bg: #2a2a4e;
-    --progress-bg: #2a2a4e;
+    --bg: #0f0f23; --card-bg: #1a1a3e; --text: #e0e0ff; --text2: #a0a0cc;
+    --primary: #6c7bff; --primary-light: #1a1a4e; --border: #2a2a5e;
+    --shadow: 0 8px 30px rgba(0,0,0,0.4); --tag-bg: #2a2a4e; --progress-bg: #2a2a4e;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
-  body {
-    font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    transition: background .3s, color .3s;
-  }
-  .header {
-    background: var(--card-bg);
-    padding: 16px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    backdrop-filter: blur(10px);
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .header h1 {
-    font-size: 20px;
-    font-weight: 700;
-    background: linear-gradient(135deg, var(--primary), var(--success));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .header-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-  .btn {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-    transition: all .2s;
-    background: var(--tag-bg);
-    color: var(--text);
-  }
-  .btn:hover { transform: translateY(-1px); opacity: .85; }
-  .btn-primary { background: var(--primary); color: #fff; }
-  .btn-success { background: var(--success); color: #fff; }
-  .btn-danger { background: var(--danger); color: #fff; }
-  .btn-sm { padding: 5px 12px; font-size: 12px; border-radius: 8px; }
-  .btn-outline {
-    background: transparent;
-    border: 2px solid var(--primary);
-    color: var(--primary);
-  }
-  .container { max-width: 800px; margin: 0 auto; padding: 20px 16px 40px; }
+  body { font-family: -apple-system,'Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; transition:background .3s,color .3s; }
+  .header { background:var(--card-bg); padding:12px 20px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:100; backdrop-filter:blur(10px); flex-wrap:wrap; gap:8px; }
+  .header h1 { font-size:18px; font-weight:700; background:linear-gradient(135deg,var(--primary),var(--success)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .header-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .btn { padding:7px 14px; border:none; border-radius:10px; cursor:pointer; font-size:13px; font-weight:600; transition:all .2s; background:var(--tag-bg); color:var(--text); }
+  .btn:hover { transform:translateY(-1px); opacity:.85; }
+  .btn-primary { background:var(--primary); color:#fff; }
+  .btn-success { background:var(--success); color:#fff; }
+  .btn-danger { background:var(--danger); color:#fff; }
+  .btn-warning { background:var(--warning); color:#fff; }
+  .btn-sm { padding:5px 10px; font-size:12px; border-radius:8px; }
+  .container { max-width:800px; margin:0 auto; padding:16px 14px 40px; }
 
-  /* Stats Bar */
-  .stats-bar {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-bottom: 16px;
-  }
-  .stat-item {
-    flex: 1;
-    min-width: 80px;
-    background: var(--card-bg);
-    border-radius: 14px;
-    padding: 12px 16px;
-    text-align: center;
-    border: 1px solid var(--border);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  }
-  .stat-item .num { font-size: 24px; font-weight: 700; color: var(--primary); }
-  .stat-item .label { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .stats-bar { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px; }
+  .stat-card { background:var(--card-bg); padding:10px 14px; border-radius:14px; flex:1; min-width:80px; text-align:center; box-shadow:var(--shadow); }
+  .stat-card .stat-num { font-size:22px; font-weight:800; color:var(--primary); }
+  .stat-card .stat-label { font-size:11px; color:var(--text2); margin-top:2px; }
+  .stat-card.due .stat-num { color:var(--danger); }
+  .stat-card.learned .stat-num { color:var(--success); }
+  .stat-card.streak .stat-num { color:var(--warning); }
 
-  /* Progress */
-  .progress-wrap {
-    background: var(--progress-bg);
-    height: 8px;
-    border-radius: 4px;
-    margin: 12px 0 16px;
-    overflow: hidden;
-  }
-  .progress-bar {
-    height: 100%;
-    border-radius: 4px;
-    background: linear-gradient(90deg, var(--primary), var(--success));
-    transition: width .5s ease;
-    width: 0%;
-  }
+  .mode-bar { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; }
+  .mode-btn { padding:7px 14px; border:2px solid var(--border); border-radius:20px; background:var(--card-bg); color:var(--text2); font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; }
+  .mode-btn.active { border-color:var(--primary); background:var(--primary); color:#fff; }
 
-  /* Mode Buttons */
-  .mode-bar {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 12px;
-    flex-wrap: wrap;
-  }
-  .mode-btn {
-    padding: 7px 14px;
-    border: 2px solid var(--border);
-    border-radius: 10px;
-    background: var(--card-bg);
-    color: var(--text);
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 600;
-    transition: all .2s;
-  }
-  .mode-btn:hover { border-color: var(--primary); }
-  .mode-btn.active {
-    background: var(--primary);
-    color: #fff;
-    border-color: var(--primary);
-  }
+  .cat-filter { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; }
+  .cat-btn { padding:5px 12px; border:1px solid var(--border); border-radius:16px; background:var(--card-bg); color:var(--text2); font-size:12px; cursor:pointer; transition:all .2s; }
+  .cat-btn.active { background:var(--primary); color:#fff; border-color:var(--primary); }
 
-  /* Category Filter */
-  .cat-bar {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-bottom: 12px;
-    max-height: 100px;
-    overflow-y: auto;
-    padding: 4px 0;
-  }
-  .cat-btn {
-    padding: 4px 12px;
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    background: var(--card-bg);
-    color: var(--text2);
-    cursor: pointer;
-    font-size: 12px;
-    transition: all .2s;
-    white-space: nowrap;
-  }
-  .cat-btn:hover { border-color: var(--primary); color: var(--primary); }
-  .cat-btn.active {
-    background: var(--primary-light);
-    color: var(--primary);
-    border-color: var(--primary);
-  }
+  .flashcard-wrap { perspective:1200px; margin-bottom:20px; }
+  .flashcard { position:relative; width:100%; min-height:340px; transform-style:preserve-3d; transition:transform var(--flip-speed); cursor:pointer; }
+  .flashcard.flipped { transform:rotateY(180deg); }
+  .card-face { position:absolute; width:100%; height:100%; backface-visibility:hidden; -webkit-backface-visibility:hidden; background:var(--card-bg); border-radius:var(--radius); box-shadow:var(--shadow); padding:24px 20px; display:flex; flex-direction:column; }
+  .card-back { transform:rotateY(180deg); }
+  .card-category { display:flex; justify-content:space-between; font-size:12px; color:var(--text2); margin-bottom:12px; }
+  .card-question { font-size:28px; font-weight:800; text-align:center; margin:auto 0; color:var(--text); line-height:1.3; }
+  .card-answer { font-size:24px; font-weight:700; text-align:center; margin-top:8px; color:var(--primary); }
+  .card-detail { font-size:14px; color:var(--text2); text-align:center; margin-top:10px; line-height:1.5; }
+  .card-hint { font-size:12px; color:var(--text2); text-align:center; margin-top:auto; opacity:.7; }
+  .card-body { flex:1; display:flex; align-items:center; justify-content:center; flex-direction:column; }
 
-  /* Search */
-  #searchBox {
-    width: 100%;
-    padding: 10px 16px;
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    font-size: 14px;
-    background: var(--card-bg);
-    color: var(--text);
-    margin-bottom: 12px;
-    outline: none;
-    transition: border-color .2s;
-  }
-  #searchBox:focus { border-color: var(--primary); }
+  .srs-info { display:flex; gap:8px; justify-content:center; margin-bottom:8px; font-size:11px; }
+  .srs-badge { padding:3px 8px; border-radius:8px; background:var(--tag-bg); color:var(--text2); }
+  .srs-badge.new { background:#e3f2fd; color:#1976d2; }
+  .srs-badge.learning { background:#fff3e0; color:#f57c00; }
+  .srs-badge.review { background:#e8f5e9; color:#388e3c; }
+  .srs-badge.mastered { background:#f3e5f5; color:#7b1fa2; }
 
-  /* Flashcard */
-  .flashcard-wrap {
-    perspective: 1000px;
-    margin-bottom: 16px;
-  }
-  .flashcard {
-    width: 100%;
-    min-height: 340px;
-    position: relative;
-    transition: transform var(--flip-speed);
-    transform-style: preserve-3d;
-    cursor: pointer;
-  }
-  .flashcard.flipped { transform: rotateY(180deg); }
+  .audio-btn { position:absolute; top:16px; right:16px; width:40px; height:40px; border-radius:50%; border:none; background:var(--primary-light); color:var(--primary); font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:10; transition:all .2s; }
+  .audio-btn:hover { transform:scale(1.1); }
+  .audio-btn.playing { animation:pulse 0.5s ease; }
+  @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.2)} }
 
-  .card-face {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    min-height: 340px;
-    backface-visibility: hidden;
-    background: var(--card-bg);
-    border-radius: var(--radius);
-    padding: 28px 24px;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow);
-  }
-  .card-back {
-    transform: rotateY(180deg);
-  }
-  .card-category {
-    font-size: 12px;
-    color: var(--text2);
-    margin-bottom: 8px;
-    display: flex;
-    justify-content: space-between;
-  }
-  .card-question {
-    font-size: 26px;
-    font-weight: 700;
-    text-align: center;
-    margin: 20px 0 10px;
-    line-height: 1.4;
-  }
-  .card-answer {
-    font-size: 22px;
-    font-weight: 700;
-    text-align: center;
-    color: var(--primary);
-    margin: 20px 0 10px;
-    line-height: 1.4;
-  }
-  .card-hint {
-    text-align: center;
-    font-size: 13px;
-    color: var(--text2);
-    margin-bottom: 10px;
-  }
-  .card-body {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  .card-detail {
-    font-size: 14px;
-    color: var(--text2);
-    text-align: center;
-    line-height: 1.6;
-    margin: 8px 0;
-    padding: 0 8px;
-  }
-  .card-example {
-    font-size: 13px;
-    color: var(--warning);
-    text-align: center;
-    margin-top: 6px;
-    background: #fff8e6;
-    padding: 8px 12px;
-    border-radius: 8px;
-    line-height: 1.5;
-  }
-  .dark .card-example { background: #2a2a1e; }
-  .card-sam {
-    font-size: 12px;
-    color: var(--text2);
-    text-align: center;
-    margin-top: auto;
-    padding-top: 12px;
-  }
+  .difficulty-bar { display:flex; gap:8px; justify-content:center; margin-top:16px; }
+  .diff-btn { padding:10px 20px; border:none; border-radius:12px; font-size:14px; font-weight:700; cursor:pointer; transition:all .2s; flex:1; max-width:120px; }
+  .diff-btn:hover { transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,0.15); }
+  .diff-again { background:#ffcdd2; color:#c62828; }
+  .diff-hard { background:#fff9c4; color:#f57f17; }
+  .diff-good { background:#c8e6c9; color:#2e7d32; }
+  .diff-easy { background:#bbdefb; color:#1565c0; }
 
-  /* Spelling Input */
-  .spelling-input {
-    width: 100%;
-    max-width: 300px;
-    padding: 12px 16px;
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    font-size: 18px;
-    text-align: center;
-    background: var(--card-bg);
-    color: var(--text);
-    outline: none;
-    transition: border-color .2s;
-  }
-  .spelling-input:focus { border-color: var(--primary); }
-  .spelling-input.correct { border-color: var(--success); background: #e8fff6; }
-  .dark .spelling-input.correct { background: #1a3a2e; }
-  .spelling-input.wrong { border-color: var(--danger); background: #ffe8e8; }
-  .dark .spelling-input.wrong { background: #3a1a1a; }
-  .feedback {
-    margin-top: 10px;
-    font-size: 16px;
-    font-weight: 600;
-    text-align: center;
-    min-height: 24px;
-  }
-  .feedback.correct { color: var(--success); }
-  .feedback.wrong { color: var(--danger); }
-  .reveal-word {
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--success);
-    text-align: center;
-    margin: 16px 0 6px;
-  }
+  .nav-bar { display:flex; gap:8px; justify-content:center; align-items:center; margin-top:16px; }
+  .nav-btn { width:44px; height:44px; border-radius:50%; border:none; background:var(--card-bg); color:var(--text); font-size:18px; cursor:pointer; box-shadow:var(--shadow); display:flex; align-items:center; justify-content:center; }
+  .nav-btn:hover { transform:translateY(-2px); }
 
-  /* Action Buttons */
-  .action-bar {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-  }
+  .spelling-input { width:100%; padding:12px; font-size:18px; text-align:center; border:2px solid var(--border); border-radius:12px; background:var(--card-bg); color:var(--text); outline:none; }
+  .spelling-input.correct { border-color:var(--success); background:var(--success); color:#fff; }
+  .spelling-input.wrong { border-color:var(--danger); background:var(--danger); color:#fff; }
+  .feedback { text-align:center; margin-top:8px; font-size:14px; font-weight:600; }
+  .feedback.correct { color:var(--success); }
+  .feedback.wrong { color:var(--danger); }
 
-  /* Navigation */
-  .nav-bar {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-  }
-  .nav-btn {
-    padding: 12px 28px;
-    border: none;
-    border-radius: 14px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-    transition: all .2s;
-  }
-  .nav-btn:hover { transform: translateY(-1px); opacity: .85; }
-  .nav-prev { background: var(--tag-bg); color: var(--text); }
-  .nav-next { background: var(--primary); color: #fff; }
-  .nav-shuffle { background: var(--warning); color: #fff; }
+  .quiz-option { padding:14px 18px; margin:6px 0; background:var(--card-bg); border:2px solid var(--border); border-radius:14px; font-size:16px; cursor:pointer; transition:all .2s; box-shadow:var(--shadow); }
+  .quiz-option:hover { border-color:var(--primary); transform:translateX(4px); }
+  .quiz-option.correct { border-color:var(--success); background:var(--success); color:#fff; }
+  .quiz-option.wrong { border-color:var(--danger); background:var(--danger); color:#fff; }
+  .quiz-option.disabled { opacity:.5; pointer-events:none; }
 
-  /* Table */
-  .table-wrap { max-height: 500px; overflow-y: auto; background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--border); }
-  .table-wrap table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  .table-wrap th { position: sticky; top: 0; background: var(--card-bg); border-bottom: 2px solid var(--border); padding: 10px 12px; text-align: left; z-index: 2; }
-  .table-wrap td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
-  .table-wrap tr:hover td { background: var(--primary-light); }
-  .table-cat { display: inline-block; padding: 2px 8px; background: var(--tag-bg); border-radius: 10px; font-size: 11px; }
+  .table-wrap { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; background:var(--card-bg); border-radius:12px; overflow:hidden; }
+  th { background:var(--primary); color:#fff; padding:10px; text-align:left; font-size:13px; }
+  td { padding:8px 10px; border-bottom:1px solid var(--border); font-size:13px; }
+  .table-cat { padding:2px 8px; border-radius:8px; background:var(--tag-bg); font-size:11px; }
 
-  /* Subcategories in card */
-  .card-subcat {
-    text-align: center;
-    margin-bottom: 8px;
-  }
-  .card-subcat span {
-    display: inline-block;
-    padding: 2px 10px;
-    background: var(--tag-bg);
-    border-radius: 10px;
-    font-size: 11px;
-    color: var(--text2);
-  }
+  .search-box { width:100%; padding:10px 14px; border:2px solid var(--border); border-radius:12px; background:var(--card-bg); color:var(--text); font-size:14px; margin-bottom:12px; outline:none; }
+  .search-box:focus { border-color:var(--primary); }
 
-  /* Count badge */
-  .total-badge {
-    font-size: 13px;
-    color: var(--text2);
-    padding: 4px 10px;
-    background: var(--tag-bg);
-    border-radius: 20px;
-  }
+  .progress-bar-wrap { width:100%; height:6px; background:var(--progress-bg); border-radius:3px; margin-top:8px; overflow:hidden; }
+  .progress-bar { height:100%; background:linear-gradient(90deg,var(--primary),var(--success)); border-radius:3px; transition:width .3s; }
 
-  /* Search Panel */
-  .search-bar {
-    position: sticky;
-    top: 57px;
-    z-index: 99;
-    background: var(--bg);
-    padding: 8px 16px;
-    display: none;
-    gap: 8px;
-    border-bottom: 1px solid var(--border);
-  }
-  .search-bar.show { display: flex; }
-  .search-bar input {
-    flex: 1;
-    padding: 10px 16px;
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    font-size: 14px;
-    background: var(--card-bg);
-    color: var(--text);
-    outline: none;
-  }
-  .search-bar input:focus { border-color: var(--primary); }
-  .search-bar .close-btn {
-    padding: 8px 14px;
-    border: none;
-    border-radius: 10px;
-    background: var(--tag-bg);
-    color: var(--text);
-    cursor: pointer;
-    font-size: 18px;
-  }
-  .search-results {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 200;
-    background: var(--bg);
-    display: none;
-    flex-direction: column;
-    padding: 16px;
-    overflow: hidden;
-  }
-  .search-results.show { display: flex; }
-  .search-results .sr-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--border);
-  }
-  .search-results .sr-header input {
-    flex: 1;
-    padding: 12px 16px;
-    border: 2px solid var(--primary);
-    border-radius: 12px;
-    font-size: 15px;
-    background: var(--card-bg);
-    color: var(--text);
-    outline: none;
-  }
-  .search-results .sr-header .close-btn {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 10px;
-    background: var(--danger);
-    color: #fff;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-  }
-  .search-results .sr-count {
-    font-size: 13px;
-    color: var(--text2);
-    margin-bottom: 8px;
-  }
-  .search-results .sr-list {
-    flex: 1;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  .search-results .sr-item {
-    background: var(--card-bg);
-    border-radius: 12px;
-    padding: 12px 16px;
-    margin-bottom: 6px;
-    border: 1px solid var(--border);
-    cursor: pointer;
-    transition: background .2s;
-  }
-  .search-results .sr-item:active { background: var(--primary-light); }
-  .search-results .sr-item .sr-en { font-size: 15px; font-weight: 600; color: var(--primary); }
-  .search-results .sr-item .sr-cn { font-size: 14px; margin-top: 2px; }
-  .search-results .sr-item .sr-cat { font-size: 11px; color: var(--text2); margin-top: 4px; display: inline-block; padding: 1px 8px; background: var(--tag-bg); border-radius: 8px; }
-  .search-results .sr-item .sr-detail { font-size: 12px; color: var(--text2); margin-top: 4px; }
-  .search-results .sr-empty {
-    text-align: center;
-    padding: 40px;
-    color: var(--text2);
-    font-size: 15px;
-  }
-  .search-overlay { display: none; position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.3); z-index: 199; }
-  .search-overlay.show { display: block; }
-
-  @media (max-width: 600px) {
-    .header h1 { font-size: 16px; }
-    .card-question { font-size: 20px; }
-    .card-answer { font-size: 18px; }
-    .flashcard { min-height: 280px; }
-    .card-face { min-height: 280px; padding: 20px 16px; }
-    .stat-item .num { font-size: 18px; }
-    .mode-btn { font-size: 12px; padding: 5px 10px; }
-    .cat-bar { max-height: 80px; }
-    .nav-btn { padding: 10px 20px; font-size: 13px; }
-    .btn { font-size: 12px; padding: 6px 12px; }
-    .header { padding: 12px 16px; }
-    .container { padding: 12px 10px 40px; }
-    .stats-bar { gap: 6px; }
-    .stat-item { padding: 8px 10px; min-width: 60px; }
-  }
-  /* Remove tap highlight on mobile */
-  * { -webkit-tap-highlight-color: transparent; }
-  button, .cat-btn, .nav-btn { touch-action: manipulation; }
+  .auto-play-toggle { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--text2); cursor:pointer; }
+  .toggle-switch { width:36px; height:20px; background:var(--border); border-radius:10px; position:relative; transition:background .2s; }
+  .toggle-switch.on { background:var(--success); }
+  .toggle-switch::after { content:''; position:absolute; width:16px; height:16px; background:#fff; border-radius:50%; top:2px; left:2px; transition:left .2s; }
+  .toggle-switch.on::after { left:18px; }
 </style>
 </head>
 <body>
-
 <div class="header">
-  <h1>📚 MES 英语闪卡大全</h1>
+  <h1>MES 英语闪卡 Pro</h1>
   <div class="header-actions">
-    <button class="btn btn-sm" onclick="toggleDark()">🌓</button>
-    <button class="btn btn-sm" onclick="openSearch()" style="background:var(--primary);color:#fff;">🔍</button>
-    <span class="total-badge" id="totalBadge">0 词</span>
+    <label class="auto-play-toggle"><div class="toggle-switch on" id="autoPlayToggle" onclick="toggleAutoPlay()"></div>自动发音</label>
+    <button class="btn btn-sm" onclick="toggleDark()">🌙</button>
   </div>
 </div>
-
 <div class="container">
-
-  <!-- Stats -->
   <div class="stats-bar">
-    <div class="stat-item"><div class="num" id="totalCount">0</div><div class="label">总词汇</div></div>
-    <div class="stat-item"><div class="num" id="learnedCount">0</div><div class="label">已掌握</div></div>
-    <div class="stat-item"><div class="num" id="progressPct">0%</div><div class="label">进度</div></div>
+    <div class="stat-card due"><div class="stat-num" id="statDue">0</div><div class="stat-label">待复习</div></div>
+    <div class="stat-card"><div class="stat-num" id="statToday">0</div><div class="stat-label">今日已学</div></div>
+    <div class="stat-card streak"><div class="stat-num" id="statStreak">0</div><div class="stat-label">连续天数</div></div>
+    <div class="stat-card learned"><div class="stat-num" id="statLearned">0</div><div class="stat-label">已掌握</div></div>
   </div>
-  <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+  <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+  <div style="text-align:center;font-size:11px;color:var(--text2);margin-top:4px;" id="progressText">0% 已掌握</div>
 
-  <!-- Mode Bar -->
-  <div class="mode-bar">
-    <button class="mode-btn active" onclick="setMode('cn2en')">🇨🇳 看中文说英文</button>
-    <button class="mode-btn" onclick="setMode('en2cn')">🇬🇧 看英文说中文</button>
-    <button class="mode-btn" onclick="setMode('spell')">✏️ 拼写练习</button>
-    <button class="mode-btn" onclick="setMode('description')">📖 看描述猜词</button>
-    <button class="mode-btn" onclick="setMode('learn')">🔁 循环学习</button>
+  <div class="mode-bar" style="margin-top:14px;">
+    <button class="mode-btn active" onclick="setMode('review')">📚 复习</button>
+    <button class="mode-btn" onclick="setMode('cn2en')">🇨🇳 看中文</button>
+    <button class="mode-btn" onclick="setMode('en2cn')">🇬🇧 看英文</button>
+    <button class="mode-btn" onclick="setMode('spell')">⌨️ 拼写</button>
+    <button class="mode-btn" onclick="setMode('quiz')">🎯 测验</button>
     <button class="mode-btn" onclick="setMode('table')">📋 词汇表</button>
   </div>
 
-  <!-- Category Filter -->
-  <div class="cat-bar" id="catFilter"></div>
-
-  <!-- Search (table mode) -->
-  <input id="searchBox" placeholder="🔍 搜索中文或英文..." style="display:none;">
-
-  <!-- Content -->
+  <div class="cat-filter" id="catFilter"></div>
+  <input class="search-box" id="searchBox" style="display:none" placeholder="搜索词汇..." oninput="renderCurrentCard()">
   <div id="contentArea"></div>
-
-  <!-- Navigation -->
-  <div class="nav-bar" id="actionButtons">
-    <button class="nav-btn nav-prev" onclick="prevCard()">◀ 上一张</button>
-    <button class="nav-btn nav-shuffle" onclick="shuffleCards()">🔀 随机</button>
-    <button class="nav-btn nav-next" onclick="nextCard()">下一张 ▶</button>
+  <div class="nav-bar" id="navBar">
+    <button class="nav-btn" onclick="prevCard()">◀</button>
+    <span id="navPos" style="font-size:13px;color:var(--text2);min-width:60px;text-align:center;"></span>
+    <button class="nav-btn" onclick="nextCard()">▶</button>
+    <button class="nav-btn" onclick="shuffleCards()" title="打乱">🔀</button>
   </div>
-
-  <!-- Actions -->
-  <div class="action-bar" id="actionButtons2">
-    <button class="btn btn-success btn-sm" onclick="markLearned(true)">✅ 已掌握 (1)</button>
-    <button class="btn btn-outline btn-sm" onclick="markLearned(false)">🔄 再学一次 (2)</button>
-  </div>
-
 </div>
-
+<audio id="audioPlayer" preload="none"></audio>
 <script>
-// ============== TERMS DATA ==============
 const ALL_TERMS = [
   // === 一、订单与计划 ===
   {cn:"销售订单", en:"Sales Order (SO)", cat:"订单与计划", detail:"客户视角的订单，记录客户要什么款、颜色、数量、交期"},
@@ -1240,42 +823,166 @@ const ALL_TERMS = [
   {cn:"质量保证", en:"QA", cat:"系统缩写", detail:"Quality Assurance"},
   {cn:"印绣花部门", en:"VAP", cat:"系统缩写", detail:"Value Added Process (Printing & Embroidery)"},
 ];
-// ============== STATE ==============
-let currentMode = 'cn2en';
+
+// ============== SRS STATE ==============
+let srsData = JSON.parse(localStorage.getItem('mes_srs_v2') || '{}');
+let studyStats = JSON.parse(localStorage.getItem('mes_stats_v2') || '{"today":0,"date":"","totalReviews":0,"correctReviews":0,"streak":0,"lastStudy":""}');
+
+let currentMode = 'review';
 let currentCat = '全部';
-let filteredTerms = [...ALL_TERMS];
+let filteredTerms = [];
 let currentIndex = 0;
 let isFlipped = false;
-let learned = JSON.parse(localStorage.getItem('mes_learned_ult') || '{}');
-let spellingAnswer = '';
+let autoPlay = localStorage.getItem('mes_autoplay') !== '0';
+
+// ============== INIT ==============
+function init() {
+  // Reset streak if new day
+  const today = new Date().toDateString();
+  if (studyStats.date !== today) {
+    if (studyStats.date) {
+      const yesterday = new Date(Date.now() - 86400000).toDateString();
+      if (studyStats.lastStudy !== yesterday && studyStats.lastStudy !== today) {
+        studyStats.streak = 0;
+      }
+    }
+    studyStats.today = 0;
+    studyStats.date = today;
+    saveStats();
+  }
+  if (localStorage.getItem('mes_dark_pro') === '1') document.body.classList.add('dark');
+  document.getElementById('autoPlayToggle').classList.toggle('on', autoPlay);
+  setCat('全部');
+}
+
+// ============== SRS ALGORITHM (SM-2) ==============
+function getSRS(idx) {
+  return srsData[idx] || { ease: 2.5, interval: 0, reps: 0, due: Date.now(), status: 'new' };
+}
+
+function rateCard(idx, rating) {
+  const card = getSRS(idx);
+  const now = Date.now();
+  const day = 86400000;
+
+  if (rating === 0) { // Again
+    card.reps = 0;
+    card.interval = 0;
+    card.due = now + 600000; // 10 minutes
+    card.status = 'learning';
+  } else if (rating === 1) { // Hard
+    card.reps = Math.max(1, card.reps);
+    card.interval = card.interval === 0 ? 1 : Math.max(1, Math.round(card.interval * 1.2));
+    card.ease = Math.max(1.3, card.ease - 0.15);
+    card.due = now + card.interval * day;
+    card.status = 'learning';
+  } else if (rating === 2) { // Good
+    card.reps++;
+    if (card.reps === 1) card.interval = 1;
+    else if (card.reps === 2) card.interval = 3;
+    else card.interval = Math.round(card.interval * card.ease);
+    card.due = now + card.interval * day;
+    card.status = card.interval >= 21 ? 'review' : 'learning';
+  } else if (rating === 3) { // Easy
+    card.reps++;
+    if (card.reps === 1) card.interval = 3;
+    else card.interval = Math.round(card.interval * card.ease * 1.3);
+    card.ease = Math.min(2.8, card.ease + 0.15);
+    card.due = now + card.interval * day;
+    card.status = 'review';
+  }
+
+  if (card.interval >= 60) card.status = 'mastered';
+  srsData[idx] = card;
+  localStorage.setItem('mes_srs_v2', JSON.stringify(srsData));
+
+  // Update stats
+  studyStats.today++;
+  studyStats.totalReviews++;
+  if (rating >= 2) studyStats.correctReviews++;
+  studyStats.lastStudy = new Date().toDateString();
+  if (studyStats.lastStudy !== studyStats.date) {
+    studyStats.streak++;
+    studyStats.date = studyStats.lastStudy;
+  }
+  saveStats();
+}
+
+function saveStats() {
+  localStorage.setItem('mes_stats_v2', JSON.stringify(studyStats));
+}
+
+function isDue(idx) {
+  const card = getSRS(idx);
+  return Date.now() >= card.due;
+}
+
+function getDueIndices() {
+  return ALL_TERMS.map((_, i) => i).filter(i => {
+    if (currentCat !== '全部' && ALL_TERMS[i].cat !== currentCat) return false;
+    return isDue(i);
+  });
+}
+
+// ============== AUDIO ==============
+function playAudio(idx) {
+  const player = document.getElementById('audioPlayer');
+  player.src = `audio/${idx}.mp3`;
+  const btn = document.querySelector('.audio-btn');
+  if (btn) { btn.classList.add('playing'); setTimeout(() => btn.classList.remove('playing'), 500); }
+  player.play().catch(() => {});
+}
+
+function toggleAutoPlay() {
+  autoPlay = !autoPlay;
+  localStorage.setItem('mes_autoplay', autoPlay ? '1' : '0');
+  document.getElementById('autoPlayToggle').classList.toggle('on', autoPlay);
+}
 
 // ============== CATEGORIES ==============
 function getCategories() {
   const cats = ['全部', ...new Set(ALL_TERMS.map(t => t.cat))];
-  // Preserve desired category order
   const order = ['全部','订单与计划','工艺路线','服装面料','辅料','服装部位','拉布裁剪','车缝','洗水','烧菲发卡','品质管理','验针','后整包装','外发管理','设备管理','考勤与效率','产前','STI无缝针织','船务物流','终端与系统','常见动词','角色部门','状态描述','场景对话','系统缩写'];
   return order.filter(c => cats.includes(c)).concat(cats.filter(c => !order.includes(c)));
 }
 
-// ============== RENDER CAT FILTER ==============
 function renderCatFilter() {
   const el = document.getElementById('catFilter');
-  const cats = getCategories();
-  el.innerHTML = cats.map(c =>
-    `<button class="cat-btn ${c === currentCat ? 'active' : ''}" onclick="setCat('${c.replace(/'/g,"\\'")}')">${c}</button>`
+  el.innerHTML = getCategories().map(c =>
+    `<button class="cat-btn ${c===currentCat?'active':''}" onclick="setCat('${c.replace(/'/g,"\\'")}')">${c}</button>`
   ).join('');
 }
 
-// ============== SET CATEGORY ==============
 function setCat(cat) {
   currentCat = cat;
-  if (cat === '全部') filteredTerms = [...ALL_TERMS];
-  else filteredTerms = ALL_TERMS.filter(t => t.cat === cat);
+  if (currentMode === 'review') {
+    filteredTerms = getDueIndices().map(i => ({...ALL_TERMS[i], _idx: i}));
+    if (filteredTerms.length === 0) {
+      filteredTerms = ALL_TERMS.map((t,i) => ({...t, _idx: i}));
+      if (cat !== '全部') filteredTerms = filteredTerms.filter(t => t.cat === cat);
+    }
+  } else {
+    if (cat === '全部') filteredTerms = ALL_TERMS.map((t,i) => ({...t, _idx: i}));
+    else filteredTerms = ALL_TERMS.map((t,i) => ({...t, _idx: i})).filter(t => t.cat === cat);
+  }
   renderCatFilter();
   currentIndex = 0;
   isFlipped = false;
   renderCurrentCard();
   updateStats();
+}
+
+// ============== MODE ==============
+function setMode(mode) {
+  currentMode = mode;
+  isFlipped = false;
+  document.querySelectorAll('.mode-btn').forEach((b, i) => {
+    const modes = ['review','cn2en','en2cn','spell','quiz','table'];
+    b.classList.toggle('active', modes[i] === mode);
+  });
+  document.getElementById('searchBox').style.display = mode === 'table' ? 'block' : 'none';
+  document.getElementById('navBar').style.display = (mode === 'table' || mode === 'quiz') ? 'none' : 'flex';
+  setCat(currentCat);
 }
 
 // ============== SHUFFLE ==============
@@ -1289,171 +996,229 @@ function shuffleCards() {
   renderCurrentCard();
 }
 
-// ============== SET MODE ==============
-function setMode(mode) {
-  currentMode = mode;
-  isFlipped = false;
-  document.querySelectorAll('.mode-btn').forEach(b => {
-    const labels = {cn2en:'看中文',en2cn:'看英文',spell:'拼写',description:'看描述',learn:'循环学习',table:'词汇表'};
-    b.classList.toggle('active', b.textContent.includes(labels[mode]));
-  });
-  document.getElementById('searchBox').style.display = mode === 'table' ? 'block' : 'none';
-  const nav = document.getElementById('actionButtons');
-  const act = document.getElementById('actionButtons2');
-  nav.style.display = (mode === 'table') ? 'none' : 'flex';
-  act.style.display = (mode === 'table') ? 'none' : 'flex';
-  currentIndex = 0;
-  renderCurrentCard();
-}
-
 // ============== STATS ==============
 function updateStats() {
-  const total = filteredTerms.length;
-  const totalAll = ALL_TERMS.length;
-  const learnedCount = filteredTerms.filter(t => learned[t.cn]).length;
-  const learnedAll = ALL_TERMS.filter(t => learned[t.cn]).length;
-  const pct = totalAll > 0 ? Math.round(learnedAll / totalAll * 100) : 0;
-  document.getElementById('totalCount').textContent = totalAll;
-  document.getElementById('learnedCount').textContent = learnedAll;
-  document.getElementById('progressPct').textContent = pct + '%';
+  const due = getDueIndices().length;
+  const learned = ALL_TERMS.map((_,i) => i).filter(i => getSRS(i).status === 'mastered').length;
+  const pct = Math.round(learned / ALL_TERMS.length * 100);
+  document.getElementById('statDue').textContent = due;
+  document.getElementById('statToday').textContent = studyStats.today;
+  document.getElementById('statStreak').textContent = studyStats.streak;
+  document.getElementById('statLearned').textContent = learned;
   document.getElementById('progressBar').style.width = pct + '%';
-  document.getElementById('totalBadge').textContent = totalAll + ' 词';
+  document.getElementById('progressText').textContent = pct + '% 已掌握 (' + learned + '/' + ALL_TERMS.length + ')';
 }
 
-// ============== RENDER CARD ==============
+// ============== RENDER ==============
 function renderCurrentCard() {
   if (filteredTerms.length === 0) {
-    document.getElementById('contentArea').innerHTML = '<div style="text-align:center;padding:60px 20px;color:var(--text2)"><div style="font-size:48px;margin-bottom:16px;">🎉</div><h3>没有词汇</h3><p>当前分类没有词汇，试试其他分类吧！</p></div>';
+    document.getElementById('contentArea').innerHTML = '<div style="text-align:center;padding:60px 20px;color:var(--text2)"><div style="font-size:48px;margin-bottom:16px;">🎉</div><h3>没有词汇</h3><p>当前分类没有词汇</p></div>';
+    document.getElementById('navPos').textContent = '';
     return;
   }
   if (currentIndex >= filteredTerms.length) currentIndex = 0;
-  if (currentIndex < 0) currentIndex = 0;
+  if (currentIndex < 0) currentIndex = filteredTerms.length - 1;
 
   if (currentMode === 'table') { renderTable(); return; }
+  if (currentMode === 'quiz') { renderQuiz(); return; }
 
   const term = filteredTerms[currentIndex];
-  const isLearned = learned[term.cn];
+  const idx = term._idx;
+  const srs = getSRS(idx);
+  document.getElementById('navPos').textContent = (currentIndex+1) + '/' + filteredTerms.length;
 
-  // === FRONT FACE ===
   let frontHtml = '<div class="card-face card-front">';
-  frontHtml += '<div class="card-category"><span>📂 ' + term.cat + '</span><span>' + (currentIndex + 1) + '/' + filteredTerms.length + '</span></div>';
+  frontHtml += '<button class="audio-btn" onclick="event.stopPropagation();playAudio(' + idx + ')">🔊</button>';
+  frontHtml += '<div class="card-category"><span>📂 ' + term.cat + '</span><span class="srs-badge ' + srs.status + '">' + srsLabel(srs) + '</span></div>';
 
-  if (currentMode === 'cn2en') {
+  let backHtml = '<div class="card-face card-back">';
+  backHtml += '<button class="audio-btn" onclick="event.stopPropagation();playAudio(' + idx + ')">🔊</button>';
+  backHtml += '<div class="card-category"><span>📂 ' + term.cat + '</span><span>' + (currentIndex+1) + '/' + filteredTerms.length + '</span></div>';
+
+  if (currentMode === 'review' || currentMode === 'cn2en') {
     frontHtml += '<div class="card-question">' + term.cn + '</div>';
     frontHtml += '<div class="card-hint">👆 点击翻转 · 看中文说英文</div>';
-    frontHtml += '<div class="card-body"><div style="font-size:40px;">🤔</div></div>';
+    backHtml += '<div class="card-answer">' + term.en + '</div>';
+    backHtml += '<div class="card-detail">' + term.detail + '</div>';
   } else if (currentMode === 'en2cn') {
     frontHtml += '<div class="card-question" style="font-size:22px;">' + term.en + '</div>';
     frontHtml += '<div class="card-hint">👆 点击翻转 · 看英文说中文</div>';
-    frontHtml += '<div class="card-body"><div style="font-size:40px;">🤔</div></div>';
-  } else if (currentMode === 'description') {
-    frontHtml += '<div class="card-hint">👆 点击翻转 · 看描述说出术语</div>';
-    frontHtml += '<div class="card-question" style="font-size:18px;font-weight:500;">' + term.detail + '</div>';
-    frontHtml += '<div class="card-body"><div style="font-size:40px;">🤔</div></div>';
+    backHtml += '<div class="card-answer">' + term.cn + '</div>';
+    backHtml += '<div class="card-detail">' + term.detail + '</div>';
   } else if (currentMode === 'spell') {
     frontHtml += '<div class="card-question">' + term.cn + '</div>';
     frontHtml += '<div class="card-hint">输入英文拼写，按回车核对</div>';
     frontHtml += '<div class="card-body"><input class="spelling-input" id="spellInput" placeholder="输入英文..." autocomplete="off" onkeydown="if(event.key==\'Enter\')checkSpell()" onclick="event.stopPropagation()"><div class="feedback" id="spellFeedback"></div></div>';
-  } else if (currentMode === 'learn') {
-    // Learning mode: show full content without flip
-    frontHtml += '<div class="card-question" style="font-size:22px;">' + term.en + '</div>';
-    frontHtml += '<div class="card-answer" style="font-size:20px;margin-top:0;">' + term.cn + '</div>';
-    frontHtml += '<div class="card-detail">' + term.detail + '</div>';
-    frontHtml += '<div class="card-hint" style="margin-top:10px;">👆 点击可翻转对照</div>';
-  }
-
-  if (isLearned) frontHtml += '<div class="card-sam">✅ 已掌握</div>';
-  frontHtml += '</div>';
-
-  // === BACK FACE ===
-  let backHtml = '<div class="card-face card-back">';
-  backHtml += '<div class="card-category"><span>📂 ' + term.cat + '</span><span>' + (currentIndex + 1) + '/' + filteredTerms.length + '</span></div>';
-
-  if (currentMode === 'cn2en') {
-    backHtml += '<div class="card-answer" style="font-size:22px;">' + term.en + '</div>';
-    backHtml += '<div class="card-detail">' + term.detail + '</div>';
-  } else if (currentMode === 'en2cn') {
-    backHtml += '<div class="card-answer">' + term.cn + '</div>';
-    backHtml += '<div class="card-detail">' + term.detail + '</div>';
-  } else if (currentMode === 'description') {
-    backHtml += '<div class="card-answer" style="font-size:20px;">' + term.en + '</div>';
+    backHtml += '<div class="card-answer" style="font-size:20px;">' + term.en.split(' (')[0] + '</div>';
     backHtml += '<div class="card-detail">中文：' + term.cn + '</div>';
-    backHtml += '<div class="card-example">💡 ' + term.detail + '</div>';
-  } else if (currentMode === 'spell') {
-    backHtml += '<div class="reveal-word">' + term.en.split(' (')[0] + '</div>';
-    backHtml += '<div class="card-answer" style="font-size:18px;margin-top:6px;">中文：' + term.cn + '</div>';
-    backHtml += '<div class="card-detail">' + term.detail + '</div>';
-  } else if (currentMode === 'learn') {
-    backHtml += '<div class="card-question" style="font-size:22px;">' + term.cn + '</div>';
-    backHtml += '<div class="card-answer" style="font-size:20px;margin-top:0;">' + term.en + '</div>';
     backHtml += '<div class="card-detail">' + term.detail + '</div>';
   }
+  frontHtml += '</div>';
+  backHtml += '<div class="card-hint">👆 点击翻回</div></div>';
 
-  backHtml += '<div class="card-sam">👆 点击翻回 · ' + (isLearned ? '✅ 已掌握' : '⬜ 学习中') + '</div>';
-  backHtml += '</div>';
+  let html = '<div class="flashcard-wrap"><div class="flashcard' + (isFlipped?' flipped':'') + '" onclick="toggleFlip()">' + frontHtml + backHtml + '</div></div>';
 
-  let html = '<div class="flashcard-wrap"><div class="flashcard' + (isFlipped ? ' flipped' : '') + '" onclick="toggleFlip()">'
-    + frontHtml + backHtml + '</div></div>';
+  // SRS rating buttons (only in review mode)
+  if (currentMode === 'review' && isFlipped) {
+    html += '<div class="difficulty-bar">';
+    html += '<button class="diff-btn diff-again" onclick="rateAndNext(' + idx + ',0)">🔴 忘了</button>';
+    html += '<button class="diff-btn diff-hard" onclick="rateAndNext(' + idx + ',1)">🟡 困难</button>';
+    html += '<button class="diff-btn diff-good" onclick="rateAndNext(' + idx + ',2)">🟢 良好</button>';
+    html += '<button class="diff-btn diff-easy" onclick="rateAndNext(' + idx + ',3)">⭐ 简单</button>';
+    html += '</div>';
+  }
 
   document.getElementById('contentArea').innerHTML = html;
 
-  if (currentMode === 'spell' && !isFlipped) {
-    const inp = document.getElementById('spellInput');
-    if (inp) { inp.focus(); spellingAnswer = term.en.split(' (')[0].toLowerCase(); }
+  // Auto play audio
+  if (autoPlay && !isFlipped) {
+    setTimeout(() => playAudio(idx), 300);
   }
 
+  // Focus spell input
+  if (currentMode === 'spell' && !isFlipped) {
+    const inp = document.getElementById('spellInput');
+    if (inp) inp.focus();
+  }
   updateStats();
+}
+
+function srsLabel(srs) {
+  const labels = { new:'新', learning:'学习中', review:'复习中', mastered:'已掌握' };
+  return labels[srs.status] || '新';
 }
 
 // ============== FLIP ==============
 function toggleFlip() {
+  if (currentMode === 'table' || currentMode === 'quiz') return;
   if (currentMode === 'spell' && !isFlipped) {
-    if (document.getElementById('spellInput') && document.activeElement === document.getElementById('spellInput')) return;
-  }
-  if (currentMode === 'table') return;
-  if (currentMode === 'learn') {
-    // In learn mode flipping shows reverse side
-    isFlipped = !isFlipped;
-    renderCurrentCard();
-    return;
+    const inp = document.getElementById('spellInput');
+    if (inp && document.activeElement === inp) return;
   }
   isFlipped = !isFlipped;
   renderCurrentCard();
+  // Play audio when flipped to back (showing English)
+  if (isFlipped && autoPlay) {
+    const term = filteredTerms[currentIndex];
+    if (term) setTimeout(() => playAudio(term._idx), 300);
+  }
 }
 
-// ============== SPELLING CHECK ==============
+// ============== RATE AND NEXT ==============
+function rateAndNext(idx, rating) {
+  rateCard(idx, rating);
+  // In review mode, get next due card
+  if (currentMode === 'review') {
+    const due = getDueIndices();
+    if (due.length > 0) {
+      filteredTerms = due.map(i => ({...ALL_TERMS[i], _idx: i}));
+    }
+  }
+  isFlipped = false;
+  nextCard();
+}
+
+// ============== SPELL CHECK ==============
 function checkSpell() {
   const inp = document.getElementById('spellInput');
   const fb = document.getElementById('spellFeedback');
   if (!inp || !fb) return;
   const answer = inp.value.trim().toLowerCase();
   if (!answer) return;
-
-  if (answer === spellingAnswer ||
-      answer.replace(/[^a-z0-9]/g,'') === spellingAnswer.replace(/[^a-z0-9]/g,'')) {
+  const term = filteredTerms[currentIndex];
+  const correct = term.en.split(' (')[0].toLowerCase();
+  if (answer === correct || answer.replace(/[^a-z0-9]/g,'') === correct.replace(/[^a-z0-9]/g,'')) {
     inp.className = 'spelling-input correct';
     fb.className = 'feedback correct';
-    fb.textContent = '✅ 拼写正确！';
-    setTimeout(() => { markLearned(true); }, 800);
+    fb.textContent = '✅ 正确！';
+    playAudio(term._idx);
+    setTimeout(() => { if (currentMode === 'review') rateAndNext(term._idx, 2); else nextCard(); }, 1000);
   } else {
     inp.className = 'spelling-input wrong';
     fb.className = 'feedback wrong';
-    fb.textContent = '❌ 不对，再想想！（点击卡片可看答案）';
+    fb.textContent = '❌ 再想想！（点击卡片看答案）';
   }
 }
 
-// ============== MARK LEARNED ==============
-function markLearned(yes) {
-  if (filteredTerms.length === 0) return;
+// ============== QUIZ MODE ==============
+function renderQuiz() {
   const term = filteredTerms[currentIndex];
-  if (yes) learned[term.cn] = true;
-  else delete learned[term.cn];
-  localStorage.setItem('mes_learned_ult', JSON.stringify(learned));
-  isFlipped = false;
-  nextCard();
+  const idx = term._idx;
+  const showEn = Math.random() > 0.5;
+  const correctAnswer = showEn ? term.en : term.cn;
+  const question = showEn ? term.cn : term.en;
+  const questionLabel = showEn ? '看中文，选英文' : '看英文，选中文';
+
+  // Generate 3 wrong options from same category or random
+  let pool = ALL_TERMS.map((t,i) => ({...t, _idx: i})).filter(t => t._idx !== idx);
+  if (currentCat !== '全部') {
+    const sameCat = pool.filter(t => t.cat === term.cat);
+    if (sameCat.length >= 3) pool = sameCat;
+  }
+  // Shuffle and pick 3
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  const wrongOptions = pool.slice(0, 3).map(t => showEn ? t.en : t.cn);
+  const options = [correctAnswer, ...wrongOptions];
+  // Shuffle options
+  for (let i = options.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [options[i], options[j]] = [options[j], options[i]];
+  }
+
+  let html = '<div style="text-align:center;margin-bottom:16px;"><span class="srs-badge ' + getSRS(idx).status + '">' + srsLabel(getSRS(idx)) + '</span> <span style="font-size:12px;color:var(--text2)">🎯 ' + questionLabel + '</span></div>';
+  html += '<div style="background:var(--card-bg);padding:30px 20px;border-radius:20px;box-shadow:var(--shadow);text-align:center;margin-bottom:16px;">';
+  html += '<div style="font-size:24px;font-weight:800;">' + question + '</div>';
+  html += '<button class="audio-btn" style="position:relative;display:inline-flex;margin-top:16px;" onclick="playAudio(' + idx + ')">🔊 听发音</button>';
+  html += '</div>';
+  options.forEach(opt => {
+    const isCorrect = opt === correctAnswer;
+    html += `<div class="quiz-option" onclick="quizAnswer(this,${isCorrect},${idx})">${opt}</div>`;
+  });
+  html += '<div id="quizFeedback" style="text-align:center;margin-top:12px;font-size:14px;font-weight:600;"></div>';
+  document.getElementById('contentArea').innerHTML = html;
+  if (autoPlay) setTimeout(() => playAudio(idx), 300);
 }
 
-// ============== NAVIGATION ==============
+function quizAnswer(el, isCorrect, idx) {
+  const options = document.querySelectorAll('.quiz-option');
+  options.forEach(o => o.classList.add('disabled'));
+  const fb = document.getElementById('quizFeedback');
+  if (isCorrect) {
+    el.classList.add('correct');
+    fb.textContent = '✅ 正确！';
+    fb.style.color = 'var(--success)';
+    rateCard(idx, 2);
+  } else {
+    el.classList.add('wrong');
+    options.forEach(o => { if (o.textContent === filteredTerms[currentIndex].en || o.textContent === filteredTerms[currentIndex].cn) o.classList.add('correct'); });
+    fb.textContent = '❌ 错了，正确答案已标绿';
+    fb.style.color = 'var(--danger)';
+    rateCard(idx, 0);
+  }
+  setTimeout(() => { isFlipped = false; nextCard(); }, 1500);
+}
+
+// ============== TABLE ==============
+function renderTable() {
+  const q = document.getElementById('searchBox').value.toLowerCase();
+  let terms = filteredTerms;
+  if (q) terms = terms.filter(t => t.cn.includes(q) || t.en.toLowerCase().includes(q) || t.cat.includes(q));
+  let html = '<div class="table-wrap"><table>';
+  html += '<tr><th>中文</th><th>English</th><th>分类</th><th>状态</th><th>🔊</th></tr>';
+  terms.forEach(t => {
+    const srs = getSRS(t._idx);
+    const statusIcons = { new:'⬜', learning:'🟡', review:'🟢', mastered:'✅' };
+    html += `<tr><td><strong>${t.cn}</strong></td><td>${t.en}</td><td><span class="table-cat">${t.cat}</span></td><td style="text-align:center">${statusIcons[srs.status]}</td><td style="text-align:center;cursor:pointer" onclick="playAudio(${t._idx})">🔊</td></tr>`;
+  });
+  html += '</table></div>';
+  if (terms.length === 0) html = '<div style="text-align:center;padding:40px;color:var(--text2)">没有匹配的词汇</div>';
+  document.getElementById('contentArea').innerHTML = html;
+}
+
+// ============== NAV ==============
 function nextCard() {
   if (currentIndex < filteredTerms.length - 1) currentIndex++;
   else currentIndex = 0;
@@ -1467,206 +1232,37 @@ function prevCard() {
   renderCurrentCard();
 }
 
-// ============== TABLE MODE ==============
-function renderTable() {
-  if (currentMode !== 'table') return;
-  const q = document.getElementById('searchBox').value.toLowerCase();
-  let terms = filteredTerms;
-  if (q) terms = terms.filter(t => t.cn.includes(q) || t.en.toLowerCase().includes(q) || t.cat.includes(q));
-
-  let html = '<div class="table-wrap"><table>';
-  html += '<tr><th>中文</th><th>English</th><th>分类</th><th>状态</th></tr>';
-  terms.forEach(t => {
-    const l = learned[t.cn] ? '✅' : '⬜';
-    html += `<tr><td><strong>${t.cn}</strong></td><td>${t.en}</td><td><span class="table-cat">${t.cat}</span></td><td style="text-align:center">${l}</td></tr>`;
-  });
-  html += '</table></div>';
-  if (terms.length === 0) html = '<div style="text-align:center;padding:40px;color:var(--text2)">没有匹配的词汇</div>';
-  document.getElementById('contentArea').innerHTML = html;
-}
-
-// ============== TOGGLE DARK ==============
+// ============== DARK ==============
 function toggleDark() {
   document.body.classList.toggle('dark');
-  localStorage.setItem('mes_dark_ult', document.body.classList.contains('dark') ? '1' : '0');
+  localStorage.setItem('mes_dark_pro', document.body.classList.contains('dark') ? '1' : '0');
 }
 
 // ============== TOUCH SWIPE ==============
-let touchStartX = 0;
-let touchStartY = 0;
-let touchEndX = 0;
-let touchEndY = 0;
-let isSwiping = false;
-
-document.addEventListener('touchstart', (e) => {
-  if (currentMode === 'table') return;
-  const t = e.touches[0];
-  touchStartX = t.clientX;
-  touchStartY = t.clientY;
-  isSwiping = false;
-}, { passive: true });
-
-document.addEventListener('touchmove', (e) => {
-  if (currentMode === 'table') return;
-  const t = e.touches[0];
-  const dx = Math.abs(t.clientX - touchStartX);
-  const dy = Math.abs(t.clientY - touchStartY);
-  if (dx > 10 || dy > 10) isSwiping = true;
-  // Add visual feedback - slight card shift
-  const card = document.querySelector('.flashcard');
-  if (card && !isFlipped && currentMode !== 'spell') {
-    const offset = t.clientX - touchStartX;
-    if (Math.abs(offset) < 100) {
-      card.style.transform = `rotateY(${isFlipped ? 180 : 0}deg) translateX(${offset * 0.2}px)`;
-    }
+let touchStartX = 0, touchEndX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
+document.addEventListener('touchend', e => {
+  touchEndX = e.changedTouches[0].screenX;
+  const diff = touchStartX - touchEndX;
+  if (Math.abs(diff) > 80) {
+    if (diff > 0) nextCard(); else prevCard();
   }
-}, { passive: true });
-
-document.addEventListener('touchend', (e) => {
-  if (currentMode === 'table') { isSwiping = false; return; }
-  if (!isSwiping) return; // Was a tap, not a swipe
-  const t = e.changedTouches[0];
-  touchEndX = t.clientX;
-  touchEndY = t.clientY;
-  const dx = touchEndX - touchStartX;
-  const dy = Math.abs(touchEndY - touchStartY);
-
-  // Reset card transform
-  const card = document.querySelector('.flashcard');
-  if (card) {
-    card.style.transform = '';
-    card.style.transition = 'none';
-    setTimeout(() => { if (card) card.style.transition = ''; }, 50);
-  }
-
-  // Only horizontal swipes (not vertical scrolling)
-  if (Math.abs(dx) > 60 && dy < Math.abs(dx)) {
-    if (dx > 0) prevCard();
-    else nextCard();
-  }
-  isSwiping = false;
-}, { passive: true });
-
-// ============== SEARCH ALL TERMS ==============
-let searchTimeout = null;
-
-function openSearch() {
-  document.getElementById('searchOverlay').classList.add('show');
-  document.getElementById('searchPanel').classList.add('show');
-  document.getElementById('searchInput').value = '';
-  document.getElementById('searchList').innerHTML = '';
-  document.getElementById('searchCount').textContent = '';
-  setTimeout(() => document.getElementById('searchInput').focus(), 200);
-}
-
-function closeSearch() {
-  document.getElementById('searchOverlay').classList.remove('show');
-  document.getElementById('searchPanel').classList.remove('show');
-}
-
-function searchAll() {
-  const q = document.getElementById('searchInput').value.trim().toLowerCase();
-  const list = document.getElementById('searchList');
-  const count = document.getElementById('searchCount');
-
-  if (!q) {
-    list.innerHTML = '<div class="sr-empty">🔍 输入中文/英文/分类名称开始搜索全部616个词汇</div>';
-    count.textContent = '';
-    return;
-  }
-
-  // Search ALL terms, not just filtered
-  const results = ALL_TERMS.filter(t =>
-    t.cn.toLowerCase().includes(q) ||
-    t.en.toLowerCase().includes(q) ||
-    t.cat.toLowerCase().includes(q) ||
-    (t.detail && t.detail.toLowerCase().includes(q))
-  );
-
-  count.textContent = results.length > 0
-    ? `找到 ${results.length} 个匹配结果`
-    : '没有匹配的词汇';
-
-  if (results.length === 0) {
-    list.innerHTML = '<div class="sr-empty">😕 没有找到，试试其他关键词</div>';
-    return;
-  }
-
-  list.innerHTML = results.map(t =>
-    `<div class="sr-item" onclick="goToTerm('${t.cn.replace(/'/g,"\\'")}')">
-      <div class="sr-en">${highlight(t.en, q)}</div>
-      <div class="sr-cn">${highlight(t.cn, q)}</div>
-      <span class="sr-cat">${t.cat}</span>
-      <div class="sr-detail">${highlight(t.detail, q)}</div>
-    </div>`
-  ).join('');
-}
-
-function highlight(text, query) {
-  if (!query) return text;
-  const idx = text.toLowerCase().indexOf(query);
-  if (idx === -1) return text;
-  return text.slice(0, idx) + '<mark style="background:#ffd700;color:#1a1a2e;border-radius:2px;padding:0 2px;">' +
-    text.slice(idx, idx + query.length) + '</mark>' +
-    text.slice(idx + query.length);
-}
-
-function goToTerm(cn) {
-  const idx = ALL_TERMS.findIndex(t => t.cn === cn);
-  if (idx === -1) return;
-  // Set filtered to all, go to that term
-  currentCat = '全部';
-  filteredTerms = [...ALL_TERMS];
-  renderCatFilter();
-  currentIndex = idx;
-  isFlipped = false;
-  renderCurrentCard();
-  closeSearch();
-  updateStats();
-}
-
-// ============== KEYBOARD SHORTCUTS ==============
-document.addEventListener('keydown', (e) => {
-  if (currentMode === 'table') return;
-  if (e.key === ' ' || e.key === 'Enter') {
-    if (currentMode === 'spell' && !isFlipped) return;
-    e.preventDefault();
-    if (!isFlipped) toggleFlip();
-    else nextCard();
-  }
-  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); nextCard(); }
-  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prevCard(); }
-  if (e.key === '1') markLearned(true);
-  if (e.key === '2') markLearned(false);
 });
 
-// ============== INIT ==============
-function init() {
-  if (localStorage.getItem('mes_dark_ult') === '1') document.body.classList.add('dark');
-  renderCatFilter();
-  filteredTerms = [...ALL_TERMS];
-  updateStats();
-  renderCurrentCard();
+// ============== KEYBOARD ==============
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return;
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextCard(); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); prevCard(); }
+  if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggleFlip(); }
+  if (e.key === '1') rateAndNext(filteredTerms[currentIndex]?._idx, 0);
+  if (e.key === '2') rateAndNext(filteredTerms[currentIndex]?._idx, 1);
+  if (e.key === '3') rateAndNext(filteredTerms[currentIndex]?._idx, 2);
+  if (e.key === '4') rateAndNext(filteredTerms[currentIndex]?._idx, 3);
+});
 
-  // Register service worker for offline PWA use
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
-  }
-}
-
+// ============== START ==============
 init();
 </script>
-
-<!-- Search Modal -->
-<div class="search-overlay" id="searchOverlay" onclick="closeSearch()"></div>
-<div class="search-results" id="searchPanel">
-  <div class="sr-header">
-    <input id="searchInput" placeholder="🔍 搜索中文 / English / 分类…" autocomplete="off" oninput="searchAll()" onkeydown="if(event.key==='Enter')searchAll()">
-    <button class="close-btn" onclick="closeSearch()">✕</button>
-  </div>
-  <div class="sr-count" id="searchCount"></div>
-  <div class="sr-list" id="searchList"></div>
-</div>
-
 </body>
 </html>
