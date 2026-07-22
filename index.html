@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="app-icon.svg">
+<meta name="apple-touch-fullscreen" content="yes">
+<title>MES 英语闪卡大全</title>
+<style>
+  :root {
+    --bg: #f0f2f5;
+    --card-bg: #fff;
+    --text: #1a1a2e;
+    --text2: #555;
+    --primary: #4361ee;
+    --primary-light: #eef0ff;
+    --success: #2ec4b6;
+    --danger: #e71d36;
+    --warning: #ff9f1c;
+    --border: #e0e0e0;
+    --shadow: 0 8px 30px rgba(0,0,0,0.12);
+    --radius: 20px;
+    --tag-bg: #f0f0f5;
+    --progress-bg: #e0e0e0;
+    --flip-speed: 0.6s;
+  }
+  .dark {
+    --bg: #0f0f23;
+    --card-bg: #1a1a3e;
+    --text: #e0e0ff;
+    --text2: #a0a0cc;
+    --primary: #6c7bff;
+    --primary-light: #1a1a4e;
+    --border: #2a2a5e;
+    --shadow: 0 8px 30px rgba(0,0,0,0.4);
+    --tag-bg: #2a2a4e;
+    --progress-bg: #2a2a4e;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    transition: background .3s, color .3s;
+  }
+  .header {
+    background: var(--card-bg);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .header h1 {
+    font-size: 20px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary), var(--success));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .header-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all .2s;
+    background: var(--tag-bg);
+    color: var(--text);
+  }
+  .btn:hover { transform: translateY(-1px); opacity: .85; }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-success { background: var(--success); color: #fff; }
+  .btn-danger { background: var(--danger); color: #fff; }
+  .btn-sm { padding: 5px 12px; font-size: 12px; border-radius: 8px; }
+  .btn-outline {
+    background: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+  }
+  .container { max-width: 800px; margin: 0 auto; padding: 20px 16px 40px; }
+
+  /* Stats Bar */
+  .stats-bar {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .stat-item {
+    flex: 1;
+    min-width: 80px;
+    background: var(--card-bg);
+    border-radius: 14px;
+    padding: 12px 16px;
+    text-align: center;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .stat-item .num { font-size: 24px; font-weight: 700; color: var(--primary); }
+  .stat-item .label { font-size: 12px; color: var(--text2); margin-top: 2px; }
+
+  /* Progress */
+  .progress-wrap {
+    background: var(--progress-bg);
+    height: 8px;
+    border-radius: 4px;
+    margin: 12px 0 16px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--success));
+    transition: width .5s ease;
+    width: 0%;
+  }
+
+  /* Mode Buttons */
+  .mode-bar {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .mode-btn {
+    padding: 7px 14px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    background: var(--card-bg);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all .2s;
+  }
+  .mode-btn:hover { border-color: var(--primary); }
+  .mode-btn.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+
+  /* Category Filter */
+  .cat-bar {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    max-height: 100px;
+    overflow-y: auto;
+    padding: 4px 0;
+  }
+  .cat-btn {
+    padding: 4px 12px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--card-bg);
+    color: var(--text2);
+    cursor: pointer;
+    font-size: 12px;
+    transition: all .2s;
+    white-space: nowrap;
+  }
+  .cat-btn:hover { border-color: var(--primary); color: var(--primary); }
+  .cat-btn.active {
+    background: var(--primary-light);
+    color: var(--primary);
+    border-color: var(--primary);
+  }
+
+  /* Search */
+  #searchBox {
+    width: 100%;
+    padding: 10px 16px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    font-size: 14px;
+    background: var(--card-bg);
+    color: var(--text);
+    margin-bottom: 12px;
+    outline: none;
+    transition: border-color .2s;
+  }
+  #searchBox:focus { border-color: var(--primary); }
+
+  /* Flashcard */
+  .flashcard-wrap {
+    perspective: 1000px;
+    margin-bottom: 16px;
+  }
+  .flashcard {
+    width: 100%;
+    min-height: 340px;
+    position: relative;
+    transition: transform var(--flip-speed);
+    transform-style: preserve-3d;
+    cursor: pointer;
+  }
+  .flashcard.flipped { transform: rotateY(180deg); }
+
+  .card-face {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 340px;
+    backface-visibility: hidden;
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+  }
+  .card-back {
+    transform: rotateY(180deg);
+  }
+  .card-category {
+    font-size: 12px;
+    color: var(--text2);
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .card-question {
+    font-size: 26px;
+    font-weight: 700;
+    text-align: center;
+    margin: 20px 0 10px;
+    line-height: 1.4;
+  }
+  .card-answer {
+    font-size: 22px;
+    font-weight: 700;
+    text-align: center;
+    color: var(--primary);
+    margin: 20px 0 10px;
+    line-height: 1.4;
+  }
+  .card-hint {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text2);
+    margin-bottom: 10px;
+  }
+  .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .card-detail {
+    font-size: 14px;
+    color: var(--text2);
+    text-align: center;
+    line-height: 1.6;
+    margin: 8px 0;
+    padding: 0 8px;
+  }
+  .card-example {
+    font-size: 13px;
+    color: var(--warning);
+    text-align: center;
+    margin-top: 6px;
+    background: #fff8e6;
+    padding: 8px 12px;
+    border-radius: 8px;
+    line-height: 1.5;
+  }
+  .dark .card-example { background: #2a2a1e; }
+  .card-sam {
+    font-size: 12px;
+    color: var(--text2);
+    text-align: center;
+    margin-top: auto;
+    padding-top: 12px;
+  }
+
+  /* Spelling Input */
+  .spelling-input {
+    width: 100%;
+    max-width: 300px;
+    padding: 12px 16px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    font-size: 18px;
+    text-align: center;
+    background: var(--card-bg);
+    color: var(--text);
+    outline: none;
+    transition: border-color .2s;
+  }
+  .spelling-input:focus { border-color: var(--primary); }
+  .spelling-input.correct { border-color: var(--success); background: #e8fff6; }
+  .dark .spelling-input.correct { background: #1a3a2e; }
+  .spelling-input.wrong { border-color: var(--danger); background: #ffe8e8; }
+  .dark .spelling-input.wrong { background: #3a1a1a; }
+  .feedback {
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    min-height: 24px;
+  }
+  .feedback.correct { color: var(--success); }
+  .feedback.wrong { color: var(--danger); }
+  .reveal-word {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--success);
+    text-align: center;
+    margin: 16px 0 6px;
+  }
+
+  /* Action Buttons */
+  .action-bar {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  /* Navigation */
+  .nav-bar {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .nav-btn {
+    padding: 12px 28px;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all .2s;
+  }
+  .nav-btn:hover { transform: translateY(-1px); opacity: .85; }
+  .nav-prev { background: var(--tag-bg); color: var(--text); }
+  .nav-next { background: var(--primary); color: #fff; }
+  .nav-shuffle { background: var(--warning); color: #fff; }
+
+  /* Table */
+  .table-wrap { max-height: 500px; overflow-y: auto; background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--border); }
+  .table-wrap table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .table-wrap th { position: sticky; top: 0; background: var(--card-bg); border-bottom: 2px solid var(--border); padding: 10px 12px; text-align: left; z-index: 2; }
+  .table-wrap td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+  .table-wrap tr:hover td { background: var(--primary-light); }
+  .table-cat { display: inline-block; padding: 2px 8px; background: var(--tag-bg); border-radius: 10px; font-size: 11px; }
+
+  /* Subcategories in card */
+  .card-subcat {
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .card-subcat span {
+    display: inline-block;
+    padding: 2px 10px;
+    background: var(--tag-bg);
+    border-radius: 10px;
+    font-size: 11px;
+    color: var(--text2);
+  }
+
+  /* Count badge */
+  .total-badge {
+    font-size: 13px;
+    color: var(--text2);
+    padding: 4px 10px;
+    background: var(--tag-bg);
+    border-radius: 20px;
+  }
+
+  /* Search Panel */
+  .search-bar {
+    position: sticky;
+    top: 57px;
+    z-index: 99;
+    background: var(--bg);
+    padding: 8px 16px;
+    display: none;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .search-bar.show { display: flex; }
+  .search-bar input {
+    flex: 1;
+    padding: 10px 16px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    font-size: 14px;
+    background: var(--card-bg);
+    color: var(--text);
+    outline: none;
+  }
+  .search-bar input:focus { border-color: var(--primary); }
+  .search-bar .close-btn {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 10px;
+    background: var(--tag-bg);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 18px;
+  }
+  .search-results {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 200;
+    background: var(--bg);
+    display: none;
+    flex-direction: column;
+    padding: 16px;
+    overflow: hidden;
+  }
+  .search-results.show { display: flex; }
+  .search-results .sr-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .search-results .sr-header input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid var(--primary);
+    border-radius: 12px;
+    font-size: 15px;
+    background: var(--card-bg);
+    color: var(--text);
+    outline: none;
+  }
+  .search-results .sr-header .close-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 10px;
+    background: var(--danger);
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .search-results .sr-count {
+    font-size: 13px;
+    color: var(--text2);
+    margin-bottom: 8px;
+  }
+  .search-results .sr-list {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .search-results .sr-item {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 6px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: background .2s;
+  }
+  .search-results .sr-item:active { background: var(--primary-light); }
+  .search-results .sr-item .sr-en { font-size: 15px; font-weight: 600; color: var(--primary); }
+  .search-results .sr-item .sr-cn { font-size: 14px; margin-top: 2px; }
+  .search-results .sr-item .sr-cat { font-size: 11px; color: var(--text2); margin-top: 4px; display: inline-block; padding: 1px 8px; background: var(--tag-bg); border-radius: 8px; }
+  .search-results .sr-item .sr-detail { font-size: 12px; color: var(--text2); margin-top: 4px; }
+  .search-results .sr-empty {
+    text-align: center;
+    padding: 40px;
+    color: var(--text2);
+    font-size: 15px;
+  }
+  .search-overlay { display: none; position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.3); z-index: 199; }
+  .search-overlay.show { display: block; }
+
+  @media (max-width: 600px) {
+    .header h1 { font-size: 16px; }
+    .card-question { font-size: 20px; }
+    .card-answer { font-size: 18px; }
+    .flashcard { min-height: 280px; }
+    .card-face { min-height: 280px; padding: 20px 16px; }
+    .stat-item .num { font-size: 18px; }
+    .mode-btn { font-size: 12px; padding: 5px 10px; }
+    .cat-bar { max-height: 80px; }
+    .nav-btn { padding: 10px 20px; font-size: 13px; }
+    .btn { font-size: 12px; padding: 6px 12px; }
+    .header { padding: 12px 16px; }
+    .container { padding: 12px 10px 40px; }
+    .stats-bar { gap: 6px; }
+    .stat-item { padding: 8px 10px; min-width: 60px; }
+  }
+  /* Remove tap highlight on mobile */
+  * { -webkit-tap-highlight-color: transparent; }
+  button, .cat-btn, .nav-btn { touch-action: manipulation; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📚 MES 英语闪卡大全</h1>
+  <div class="header-actions">
+    <button class="btn btn-sm" onclick="toggleDark()">🌓</button>
+    <button class="btn btn-sm" onclick="openSearch()" style="background:var(--primary);color:#fff;">🔍</button>
+    <span class="total-badge" id="totalBadge">0 词</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat-item"><div class="num" id="totalCount">0</div><div class="label">总词汇</div></div>
+    <div class="stat-item"><div class="num" id="learnedCount">0</div><div class="label">已掌握</div></div>
+    <div class="stat-item"><div class="num" id="progressPct">0%</div><div class="label">进度</div></div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+
+  <!-- Mode Bar -->
+  <div class="mode-bar">
+    <button class="mode-btn active" onclick="setMode('cn2en')">🇨🇳 看中文说英文</button>
+    <button class="mode-btn" onclick="setMode('en2cn')">🇬🇧 看英文说中文</button>
+    <button class="mode-btn" onclick="setMode('spell')">✏️ 拼写练习</button>
+    <button class="mode-btn" onclick="setMode('description')">📖 看描述猜词</button>
+    <button class="mode-btn" onclick="setMode('learn')">🔁 循环学习</button>
+    <button class="mode-btn" onclick="setMode('table')">📋 词汇表</button>
+  </div>
+
+  <!-- Category Filter -->
+  <div class="cat-bar" id="catFilter"></div>
+
+  <!-- Search (table mode) -->
+  <input id="searchBox" placeholder="🔍 搜索中文或英文..." style="display:none;">
+
+  <!-- Content -->
+  <div id="contentArea"></div>
+
+  <!-- Navigation -->
+  <div class="nav-bar" id="actionButtons">
+    <button class="nav-btn nav-prev" onclick="prevCard()">◀ 上一张</button>
+    <button class="nav-btn nav-shuffle" onclick="shuffleCards()">🔀 随机</button>
+    <button class="nav-btn nav-next" onclick="nextCard()">下一张 ▶</button>
+  </div>
+
+  <!-- Actions -->
+  <div class="action-bar" id="actionButtons2">
+    <button class="btn btn-success btn-sm" onclick="markLearned(true)">✅ 已掌握 (1)</button>
+    <button class="btn btn-outline btn-sm" onclick="markLearned(false)">🔄 再学一次 (2)</button>
+  </div>
+
+</div>
+
+<script>
+// ============== TERMS DATA ==============
+const ALL_TERMS = [
+  // === 一、订单与计划 ===
+  {cn:"销售订单", en:"Sales Order (SO)", cat:"订单与计划", detail:"客户视角的订单，记录客户要什么款、颜色、数量、交期"},
+  {cn:"制单", en:"MES Order (MO)", cat:"订单与计划", detail:"工厂视角的生产组织单元，一个SO可按颜色/货期拆成多个MO"},
+  {cn:"工单", en:"Shop Order", cat:"订单与计划", detail:"车间视角的最小排产单元，一个MO按幅位拆成多个工单"},
+  {cn:"三层订单体系", en:"Three-tier Order (SO→MO→Shop Order)", cat:"订单与计划", detail:"MES中1:N:N的订单分层体系：销售订单→制单→工单"},
+  {cn:"套装", en:"Set / Suit", cat:"订单与计划", detail:"多件衣服搭配成套销售，如上衣+裤子+内衣"},
+  {cn:"套装组件", en:"Component", cat:"订单与计划", detail:"套装中的单件组件，编号为C1、C2、C3等"},
+  {cn:"拆分规则", en:"Splitting Rule", cat:"订单与计划", detail:"MO生成规则，决定一个SO按PO/颜色/货期等拆成多个MO"},
+  {cn:"采购订单", en:"Purchase Order (PO)", cat:"订单与计划", detail:"客户下达的采购订单，是SO的上游单据"},
+  {cn:"生产制单管理", en:"Production Order Management", cat:"订单与计划", detail:"管理MO的界面：确认/撤销/删除/关闭制单"},
+  {cn:"订单确认", en:"Order Confirmation", cat:"订单与计划", detail:"确认制单，确认后MO进入可生产状态"},
+  {cn:"订单下达", en:"Order Release", cat:"订单与计划", detail:"下达制单，系统生成工单和SFC"},
+  {cn:"订单关闭", en:"Order Close", cat:"订单与计划", detail:"关闭已完成的生产制单"},
+  {cn:"订单取消", en:"Order Cancellation", cat:"订单与计划", detail:"取消未完成的制单"},
+  {cn:"排产", en:"Production Scheduling", cat:"订单与计划", detail:"根据产能和交期安排生产计划"},
+  {cn:"产能计划", en:"Capacity Planning", cat:"订单与计划", detail:"评估工厂产能能否满足订单需求"},
+  {cn:"交期", en:"Delivery Date / Due Date", cat:"订单与计划", detail:"客户要求的交货日期"},
+  {cn:"计划开工日", en:"Planned Start Date", cat:"订单与计划", detail:"系统计划开始生产的日期"},
+  {cn:"计划完工日", en:"Planned Completion Date", cat:"订单与计划", detail:"系统计划完成生产的日期"},
+  {cn:"实际开工日", en:"Actual Start Date", cat:"订单与计划", detail:"实际开始生产的日期"},
+  {cn:"实际完工日", en:"Actual Completion Date", cat:"订单与计划", detail:"实际完成生产的日期"},
+  {cn:"订单优先级", en:"Order Priority", cat:"订单与计划", detail:"订单的优先级排序，影响排产顺序"},
+  {cn:"订单状态", en:"Order Status", cat:"订单与计划", detail:"制单的当前状态：新建/确认/下达/进行中/完成/关闭"},
+  {cn:"延期", en:"Delay / Postponement", cat:"订单与计划", detail:"订单交期延迟的情况"},
+  {cn:"急单", en:"Rush Order", cat:"订单与计划", detail:"需要优先处理的紧急订单"},
+  {cn:"订单数量", en:"Order Quantity", cat:"订单与计划", detail:"制单的总生产数量"},
+  {cn:"已产数量", en:"Produced Quantity", cat:"订单与计划", detail:"当前已完成的生产数量"},
+  {cn:"剩余数量", en:"Balance Quantity", cat:"订单与计划", detail:"尚未生产的剩余数量"},
+  {cn:"物料清单", en:"BOM (Bill of Materials)", cat:"订单与计划", detail:"产品所需的物料清单，包括面料和辅料明细"},
+
+  // === 二、工艺路线 ===
+  {cn:"工艺路线", en:"Router / Routing", cat:"工艺路线", detail:"产品生产的工序序列和流转关系，从原材料到成品需经过哪些工序"},
+  {cn:"工序", en:"Operation / Step", cat:"工艺路线", detail:"工艺路线中的单个加工步骤，如车缝、查衫、包装等"},
+  {cn:"幅位", en:"Part / Panel", cat:"工艺路线", detail:"独立加工部位，如衫身(BODY)、袖子(SLEEVE)、领子(COLLAR)"},
+  {cn:"标准允许分钟数", en:"SAM (Standard Allowed Minutes)", cat:"工艺路线", detail:"标准速度下完成该工序需要的时间(分钟)，由IE部门设定"},
+  {cn:"机器标准工时", en:"PTM (Piece Time Minutes)", cat:"工艺路线", detail:"机器完成一道工序的标准时间(分钟)，用于印花绣花等机器工序"},
+  {cn:"工序序列", en:"Router Sequence (ROUTER_SEQ)", cat:"工艺路线", detail:"逗号分隔的工序ID列表，表示产品需要经过的完整工序链路"},
+  {cn:"工序流转方向", en:"Next Step (NEXT_STEP)", cat:"工艺路线", detail:"定义每个工序的下一步流转到哪个工序，支持并行分支"},
+  {cn:"版本号", en:"Revision", cat:"工艺路线", detail:"工艺路线版本号，每次变更后递增，用于版本管理"},
+  {cn:"产品序列号", en:"SFC (Shop Floor Control)", cat:"工艺路线", detail:"MES中的最小生产单位，每个SFC绑定一条工艺路线并按工序过站"},
+  {cn:"组合幅位", en:"Combine Part", cat:"工艺路线", detail:"装配工序需要组合的幅位，如合肩工序需要将袖子装配到衫身上"},
+  {cn:"可选工序", en:"Optional Step", cat:"工艺路线", detail:"在特定条件下可选择执行或不执行的工序"},
+  {cn:"返工工艺路线", en:"Rework Router", cat:"工艺路线", detail:"针对不合格品重新加工所需的特殊工序序列"},
+  {cn:"瓶颈工序", en:"Bottleneck Operation", cat:"工艺路线", detail:"整条产线中产能最低、制约产出的工序"},
+  {cn:"前置工序", en:"Preceding Operation", cat:"工艺路线", detail:"当前工序之前必须完成的工序"},
+  {cn:"后置工序", en:"Subsequent Operation", cat:"工艺路线", detail:"当前工序完成后进入的下一道工序"},
+  {cn:"并行工序", en:"Parallel Operation", cat:"工艺路线", detail:"可以同时进行的多个工序"},
+  {cn:"工序代码", en:"Operation Code", cat:"工艺路线", detail:"每个工序的唯一编码标识"},
+  {cn:"工序描述", en:"Operation Description", cat:"工艺路线", detail:"对工序内容的详细说明"},
+  {cn:"默认工艺路线", en:"Default Routing", cat:"工艺路线", detail:"系统默认使用的标准工艺路线"},
+  {cn:"工艺路线状态", en:"Router Status", cat:"工艺路线", detail:"工艺路线是激活还是停用的状态标识"},
+  {cn:"工序组", en:"Operation Group", cat:"工艺路线", detail:"相关工序的分组，如裁剪组、车缝组、包装组"},
+  {cn:"总标准工时", en:"Total SAM", cat:"工艺路线", detail:"一个产品所有工序SAM的总和"},
+
+  // === 三、服装面料 ===
+  {cn:"面料", en:"Fabric", cat:"服装面料", detail:"用于制作服装的布料"},
+  {cn:"针织布", en:"Knitted Fabric", cat:"服装面料", detail:"由线圈相互串套而成的面料，有弹性"},
+  {cn:"梭织布", en:"Woven Fabric", cat:"服装面料", detail:"由经纬纱交织而成的面料，结构稳定"},
+  {cn:"牛仔布", en:"Denim", cat:"服装面料", detail:"斜纹棉布，常用于牛仔裤"},
+  {cn:"棉", en:"Cotton", cat:"服装面料", detail:"天然植物纤维面料"},
+  {cn:"涤纶", en:"Polyester", cat:"服装面料", detail:"合成纤维，抗皱耐磨"},
+  {cn:"尼龙", en:"Nylon", cat:"服装面料", detail:"合成纤维，韧性好"},
+  {cn:"氨纶/弹力纤维", en:"Spandex / Elastane", cat:"服装面料", detail:"高弹性合成纤维，通常与其他纤维混纺"},
+  {cn:"粘胶", en:"Viscose / Rayon", cat:"服装面料", detail:"再生纤维素纤维，手感柔软"},
+  {cn:"羊毛", en:"Wool", cat:"服装面料", detail:"天然动物毛纤维"},
+  {cn:"真丝", en:"Silk", cat:"服装面料", detail:"天然蛋白纤维，光滑柔软"},
+  {cn:"亚麻", en:"Linen", cat:"服装面料", detail:"天然植物韧皮纤维，透气凉爽"},
+  {cn:"混纺", en:"Blended Fabric", cat:"服装面料", detail:"两种或以上纤维混合纺成的面料"},
+  {cn:"平纹布", en:"Jersey", cat:"服装面料", detail:"单面针织布，最常见的针织面料"},
+  {cn:"罗纹", en:"Rib", cat:"服装面料", detail:"有凹凸条纹的针织面料，弹性好"},
+  {cn:"双面布", en:"Interlock", cat:"服装面料", detail:"双面针织布，比平纹布厚实"},
+  {cn:"抓毛布", en:"Fleece", cat:"服装面料", detail:"表面有抓毛效果的保暖针织面料"},
+  {cn:"珠地布", en:"Pique", cat:"服装面料", detail:"表面有蜂巢状小孔的针织布"},
+  {cn:"网眼布", en:"Mesh", cat:"服装面料", detail:"有网眼结构的透气面料"},
+  {cn:"摇粒绒", en:"Polar Fleece", cat:"服装面料", detail:"柔软保暖的针织抓毛面料"},
+  {cn:"毛巾布", en:"Terry", cat:"服装面料", detail:"有毛圈结构的毛巾质感面料"},
+  {cn:"灯芯绒", en:"Corduroy", cat:"服装面料", detail:"有纵向条纹的梭织面料"},
+  {cn:"斜纹布", en:"Twill", cat:"服装面料", detail:"斜纹组织织造，牢固耐磨"},
+  {cn:"帆布", en:"Canvas", cat:"服装面料", detail:"厚重结实的平纹梭织面料"},
+  {cn:"色织布", en:"Yarn-dyed Fabric", cat:"服装面料", detail:"先将纱线染色后再织造的面料"},
+  {cn:"印花布", en:"Printed Fabric", cat:"服装面料", detail:"布面上印有图案的面料"},
+  {cn:"染色布", en:"Dyed Fabric", cat:"服装面料", detail:"胚布染色的面料"},
+  {cn:"匹头染色", en:"Piece Dyed", cat:"服装面料", detail:"先将胚布织好再整匹染色的工艺"},
+  {cn:"纱线染色", en:"Yarn Dyed", cat:"服装面料", detail:"先将纱线染色后再织布"},
+  {cn:"缸号", en:"Dye Lot No.", cat:"服装面料", detail:"布料染色批次号，用于色差追溯"},
+  {cn:"布封", en:"Fabric Width", cat:"服装面料", detail:"面料的幅宽尺寸"},
+  {cn:"布重", en:"Fabric Weight (GSM)", cat:"服装面料", detail:"面料克重，克/平方米"},
+  {cn:"缩水率", en:"Shrinkage Rate", cat:"服装面料", detail:"面料水洗后的收缩百分比"},
+  {cn:"色牢度", en:"Color Fastness", cat:"服装面料", detail:"面料颜色的耐水洗/耐摩擦牢度"},
+  {cn:"对色", en:"Color Matching / Shade Band", cat:"服装面料", detail:"将面料颜色与标准色卡进行比对"},
+  {cn:"成分", en:"Fabric Composition", cat:"服装面料", detail:"面料的纤维成分及含量百分比"},
+  {cn:"布卷", en:"Fabric Roll / Bolt", cat:"服装面料", detail:"成卷包装的面料"},
+
+  // === 四、辅料 ===
+  {cn:"拉链", en:"Zipper", cat:"辅料", detail:"用于开合衣服的金属或塑料链条"},
+  {cn:"纽扣", en:"Button", cat:"辅料", detail:"用于扣合衣服的圆形扣件"},
+  {cn:"四合扣", en:"Snap / Popper", cat:"辅料", detail:"按扣，由公母两部分组成"},
+  {cn:"铆钉", en:"Rivet", cat:"辅料", detail:"用于加固接合处的金属钉"},
+  {cn:"魔术贴", en:"Velcro / Hook & Loop", cat:"辅料", detail:"由钩面和毛面组成的粘贴带"},
+  {cn:"松紧带", en:"Elastic Band", cat:"辅料", detail:"有弹性的织带，用于腰头等部位"},
+  {cn:"织带", en:"Webbing / Tape", cat:"辅料", detail:"编织而成的带状辅料"},
+  {cn:"绳/索", en:"Drawcord / String", cat:"辅料", detail:"用于抽绳或装饰的绳子"},
+  {cn:"蕾丝", en:"Lace", cat:"辅料", detail:"花纹镂空的装饰面料"},
+  {cn:"花边", en:"Trimming / Lace Trim", cat:"辅料", detail:"用于衣物边缘装饰的花式带"},
+  {cn:"绣花章", en:"Embroidery Patch", cat:"辅料", detail:"预先绣好的可缝制图案章"},
+  {cn:"金属扣", en:"Metal Button", cat:"辅料", detail:"金属材质的纽扣"},
+  {cn:"主唛/主标", en:"Main Label / Brand Label", cat:"辅料", detail:"缝在领口或腰头的品牌标"},
+  {cn:"洗水唛", en:"Care Label", cat:"辅料", detail:"标明洗涤方式和成分的标签"},
+  {cn:"尺码唛", en:"Size Label", cat:"辅料", detail:"标有尺码的小标签"},
+  {cn:"价格牌", en:"Price Tag / Hang Tag", cat:"辅料", detail:"挂在衣服上的价格吊牌"},
+  {cn:"胶袋", en:"Polybag", cat:"辅料", detail:"用于包装衣物的塑料袋"},
+  {cn:"衬/粘合衬", en:"Interlining / Fusible", cat:"辅料", detail:"用于增强面料硬挺度的粘合衬布"},
+  {cn:"里布", en:"Lining", cat:"辅料", detail:"缝在衣服内部的衬里布料"},
+  {cn:"缝纫线", en:"Sewing Thread", cat:"辅料", detail:"用于缝合衣片的线"},
+  {cn:"鸡眼", en:"Eyelet / Grommet", cat:"辅料", detail:"用于穿绳孔眼的金属环"},
+  {cn:"扣件", en:"Buckle", cat:"辅料", detail:"用于扣合的配件"},
+  {cn:"拉链头", en:"Zipper Slider / Puller", cat:"辅料", detail:"拉动拉链合拢的部件"},
+  {cn:"橡筋线", en:"Elastic Thread", cat:"辅料", detail:"有弹性的缝纫线"},
+  {cn:"缎带", en:"Ribbon", cat:"辅料", detail:"装饰用的丝带"},
+
+  // === 五、服装部位 ===
+  {cn:"衫身/大身", en:"Body", cat:"服装部位", detail:"衣服的主体部分"},
+  {cn:"前幅", en:"Front Panel", cat:"服装部位", detail:"衣服的前面部分"},
+  {cn:"后幅", en:"Back Panel", cat:"服装部位", detail:"衣服的背面部分"},
+  {cn:"袖子", en:"Sleeve", cat:"服装部位", detail:"衣服的袖部"},
+  {cn:"领子", en:"Collar", cat:"服装部位", detail:"衣服的领部"},
+  {cn:"袖口", en:"Cuff", cat:"服装部位", detail:"袖子末端部位"},
+  {cn:"下摆", en:"Hem / Bottom", cat:"服装部位", detail:"衣服的底部边缘"},
+  {cn:"肩位", en:"Shoulder", cat:"服装部位", detail:"衣服肩部的区域"},
+  {cn:"领窝", en:"Neckline", cat:"服装部位", detail:"领子与衣身相连的弧线区域"},
+  {cn:"前中", en:"Center Front (CF)", cat:"服装部位", detail:"衣服前幅的正中线"},
+  {cn:"后中", en:"Center Back (CB)", cat:"服装部位", detail:"衣服后幅的正中线"},
+  {cn:"侧缝", en:"Side Seam", cat:"服装部位", detail:"衣服两侧的缝合线"},
+  {cn:"肩缝", en:"Shoulder Seam", cat:"服装部位", detail:"前后幅在肩部的缝合线"},
+  {cn:"门襟", en:"Placket / Fly", cat:"服装部位", detail:"衣服开合处的边缘"},
+  {cn:"口袋", en:"Pocket", cat:"服装部位", detail:"用于储物的袋状结构"},
+  {cn:"袋唇", en:"Welt / Pocket Lip", cat:"服装部位", detail:"袋口的边缘装饰条"},
+  {cn:"袋盖", en:"Pocket Flap", cat:"服装部位", detail:"口袋上方覆盖的布片"},
+  {cn:"腰头", en:"Waistband", cat:"服装部位", detail:"裤子或裙子腰部的部位"},
+  {cn:"育克", en:"Yoke", cat:"服装部位", detail:"肩膀或腰部拼接的分割片"},
+  {cn:"贴边", en:"Facing", cat:"服装部位", detail:"用于收边和加强的贴布"},
+  {cn:"镶边", en:"Piping", cat:"服装部位", detail:"缝在边缘的装饰条"},
+  {cn:"捆条", en:"Bias Binding", cat:"服装部位", detail:"斜裁的包边布条"},
+  {cn:"褶", en:"Pleat / Tuck", cat:"服装部位", detail:"折叠缝合的褶皱"},
+  {cn:"省", en:"Dart", cat:"服装部位", detail:"为塑造立体形状而缝去的三角形"},
+  {cn:"分割线", en:"Panel Line / Seam Line", cat:"服装部位", detail:"衣片间的拼接缝线"},
+  {cn:"袖笼", en:"Armhole", cat:"服装部位", detail:"袖子与衣身相连的袖洞"},
+  {cn:"袖山", en:"Sleeve Cap", cat:"服装部位", detail:"袖子顶部的弧线区域"},
+  {cn:"领尖", en:"Collar Point", cat:"服装部位", detail:"领子的尖端"},
+  {cn:"扣眼", en:"Buttonhole", cat:"服装部位", detail:"纽扣穿过的开口"},
+  {cn:"领围", en:"Neckband", cat:"服装部位", detail:"围绕颈部的领圈部位"},
+  {cn:"裤内缝", en:"Inseam", cat:"服装部位", detail:"裤子内侧的缝合线"},
+  {cn:"裤外缝", en:"Outseam", cat:"服装部位", detail:"裤子外侧的缝合线"},
+  {cn:"前浪", en:"Front Rise", cat:"服装部位", detail:"裤子前腰到裆底的长度"},
+  {cn:"后浪", en:"Back Rise", cat:"服装部位", detail:"裤子后腰到裆底的长度"},
+
+  // === 六、拉布裁剪 ===
+  {cn:"松布", en:"Fabric Relaxing", cat:"拉布裁剪", detail:"将布卷展开静置，让面料自然回缩释放张力"},
+  {cn:"拉布", en:"Spreading", cat:"拉布裁剪", detail:"按唛架图将布料层层铺开的工序"},
+  {cn:"裁剪", en:"Cutting", cat:"拉布裁剪", detail:"按唛架图用裁刀将布料裁成裁片的工序"},
+  {cn:"床次", en:"Bed Time / Cut Batch", cat:"拉布裁剪", detail:"一次拉布裁剪的作业批次，每床有唯一编号"},
+  {cn:"唛架", en:"Marker / PLT", cat:"拉布裁剪", detail:"裁剪排料图，定义了各尺码衣片的排列方式"},
+  {cn:"尺码比例", en:"Size Ratio", cat:"拉布裁剪", detail:"一床中各尺码裁片的数量配比"},
+  {cn:"拉布层数", en:"Spread Layers / Number of Plys", cat:"拉布裁剪", detail:"拉布时布料重叠铺设的层数"},
+  {cn:"扎", en:"Bundle", cat:"拉布裁剪", detail:"将裁片按一定数量分组的最小管理单元"},
+  {cn:"扎牌", en:"Bundle Card", cat:"拉布裁剪", detail:"绑定到扎号的RFID卡号或纸菲，用于终端机刷卡"},
+  {cn:"每扎数量", en:"Bundle Quantity (BUNDLE_QTY)", cat:"拉布裁剪", detail:"每扎包含的裁片件数"},
+  {cn:"配扎", en:"Bundle Matching", cat:"拉布裁剪", detail:"把不同幅位的裁片组合到同一扎牌"},
+  {cn:"子母牌", en:"Parent-Child Card", cat:"拉布裁剪", detail:"母卡拆分为若干子卡的数量拆分机制"},
+  {cn:"下数", en:"Scrap / Defect", cat:"拉布裁剪", detail:"生产过程中产生的疵品或报废数量"},
+  {cn:"烧菲", en:"Burning / Hairpin", cat:"拉布裁剪", detail:"生成扎牌的操作，'菲'指扎牌标签"},
+  {cn:"横间", en:"Alternate Stripe", cat:"拉布裁剪", detail:"间条布，拉布时每层必须对齐条纹"},
+  {cn:"非横间", en:"Non-alternate / Solid", cat:"拉布裁剪", detail:"素色布，无论叠多少层裁刀走一遍时间一样"},
+  {cn:"绑号", en:"Bind No. (BIND_NO)", cat:"拉布裁剪", detail:"拉布层累计层数范围"},
+  {cn:"裁床发卡", en:"Cutting Bed Card Issuing", cat:"拉布裁剪", detail:"裁床按唛架+层数生成扎牌并分配RFID卡号"},
+  {cn:"拉布机", en:"Spreading Machine", cat:"拉布裁剪", detail:"自动拉布铺料的机械设备"},
+  {cn:"裁刀", en:"Cutting Knife", cat:"拉布裁剪", detail:"用于裁剪布料的刀具"},
+  {cn:"直刀", en:"Straight Knife", cat:"拉布裁剪", detail:"直线上下运动的垂直裁刀"},
+  {cn:"圆刀", en:"Round Knife", cat:"拉布裁剪", detail:"圆形旋转刀片的裁刀"},
+  {cn:"带刀", en:"Band Knife", cat:"拉布裁剪", detail:"带状循环运动的精密裁刀"},
+  {cn:"冲床", en:"Die Cutter", cat:"拉布裁剪", detail:"使用模具冲压裁片的设备"},
+  {cn:"自动裁剪机", en:"Auto Cutter / CNC Cutter", cat:"拉布裁剪", detail:"电脑控制的自动裁剪系统"},
+  {cn:"面对面铺布", en:"Face to Face Spreading", cat:"拉布裁剪", detail:"每两层布正面相对叠铺"},
+  {cn:"面向上铺布", en:"Face Up Spreading", cat:"拉布裁剪", detail:"所有布正面朝上铺放"},
+  {cn:"单向铺布", en:"One Way Spreading (Nap)", cat:"拉布裁剪", detail:"用于有方向性的面料，每层同向铺"},
+  {cn:"对条对格", en:"Stripe / Plaid Matching", cat:"拉布裁剪", detail:"条格面料需要对齐条纹图案的铺布方式"},
+  {cn:"裁片编号", en:"Cut Piece Numbering", cat:"拉布裁剪", detail:"为每片裁片编号以追踪"},
+  {cn:"余布", en:"Leftover Fabric", cat:"拉布裁剪", detail:"裁剪后剩余的面料"},
+  {cn:"布碎", en:"Fabric Scrap", cat:"拉布裁剪", detail:"裁剪后的小块废料"},
+  {cn:"床长", en:"Table Length", cat:"拉布裁剪", detail:"裁床的长度"},
+  {cn:"唛架长度", en:"Marker Length", cat:"拉布裁剪", detail:"排料图的总长度"},
+  {cn:"唛架利用率", en:"Marker Efficiency / Utilization", cat:"拉布裁剪", detail:"面料利用率，有效裁片面积占总面积的百分比"},
+  {cn:"用量", en:"Fabric Consumption", cat:"拉布裁剪", detail:"生产一件衣服所需的面料用量"},
+  {cn:"真空台", en:"Vacuum Table", cat:"拉布裁剪", detail:"带真空吸附功能的裁剪台面"},
+  {cn:"分扎/捆扎", en:"Bundling after Cutting", cat:"拉布裁剪", detail:"裁剪后将裁片按扎分组整理"},
+
+  // === 七、车缝 ===
+  {cn:"车缝", en:"Sewing", cat:"车缝", detail:"用缝纫机将裁片缝合的工序"},
+  {cn:"平车", en:"Lockstitch Machine", cat:"车缝", detail:"最常见的缝纫机，缝出锁式线迹"},
+  {cn:"单针平车", en:"Single Needle Lockstitch (SNLS)", cat:"车缝", detail:"单根机针的平缝机"},
+  {cn:"双针平车", en:"Double Needle Lockstitch", cat:"车缝", detail:"双针同时缝出两条平行线"},
+  {cn:"包缝机", en:"Overlock Machine", cat:"车缝", detail:"切割并包裹布边的缝纫机"},
+  {cn:"三线包缝", en:"3-Thread Overlock", cat:"车缝", detail:"三线包缝线迹，用于普通布边处理"},
+  {cn:"四线包缝", en:"4-Thread Overlock", cat:"车缝", detail:"四线包缝线迹，兼具缝合和包边"},
+  {cn:"五线包缝", en:"5-Thread Overlock / Safety Stitch", cat:"车缝", detail:"五线安全缝线迹，强度最高"},
+  {cn:"绷缝机", en:"Coverstitch Machine", cat:"车缝", detail:"用于下摆和袖口的覆盖线迹缝纫机"},
+  {cn:"埋夹机", en:"Feed-off-the-Arm (FOTA)", cat:"车缝", detail:"用于筒状部位的缝合"},
+  {cn:"打枣机", en:"Bartack Machine", cat:"车缝", detail:"用于加固受力部位的套结缝"},
+  {cn:"锁眼机", en:"Buttonhole Machine", cat:"车缝", detail:"自动开锁扣眼的专用机器"},
+  {cn:"钉扣机", en:"Button Attaching Machine", cat:"车缝", detail:"自动钉纽扣的专用机器"},
+  {cn:"人字机", en:"Zigzag Machine", cat:"车缝", detail:"缝出人字形线迹的缝纫机"},
+  {cn:"花样机", en:"Pattern Sewing Machine", cat:"车缝", detail:"可编程缝制复杂图案的电脑缝纫机"},
+  {cn:"电脑车", en:"Computerized Sewing Machine", cat:"车缝", detail:"电脑控制各项参数的缝纫机"},
+  {cn:"合肩", en:"Shoulder Seaming", cat:"车缝", detail:"缝合前后幅的肩部"},
+  {cn:"合侧", en:"Side Seaming", cat:"车缝", detail:"缝合衣服两侧的工序"},
+  {cn:"上袖", en:"Setting Sleeve / Attaching Sleeve", cat:"车缝", detail:"将袖子缝到衣身上的工序"},
+  {cn:"上领", en:"Attaching Collar", cat:"车缝", detail:"将领子缝到衣身上的工序"},
+  {cn:"打枣", en:"Bartack / Bar-tack", cat:"车缝", detail:"在受力位置做加固套结"},
+  {cn:"锁眼", en:"Buttonhole Making", cat:"车缝", detail:"制作纽扣眼的工序"},
+  {cn:"钉扣", en:"Button Attaching", cat:"车缝", detail:"将纽扣缝到衣服上的工序"},
+  {cn:"冚车", en:"Coverstitch", cat:"车缝", detail:"用绷缝机缝制下摆"},
+  {cn:"平缝", en:"Plain Seam", cat:"车缝", detail:"最简单的两片布拼接缝法"},
+  {cn:"来去缝", en:"French Seam", cat:"车缝", detail:"将毛边包在内部的精致缝法"},
+  {cn:"滚边/包边", en:"Bias Binding", cat:"车缝", detail:"用斜裁布条包裹布料边缘"},
+  {cn:"切线/剪线", en:"Trimming Thread", cat:"车缝", detail:"剪去多余的缝线线头"},
+  {cn:"针距", en:"Stitch Length / Stitch Density", cat:"车缝", detail:"每针之间的距离，通常以针/英寸表示"},
+  {cn:"针号", en:"Needle Size", cat:"车缝", detail:"缝纫针的粗细编号"},
+  {cn:"面线", en:"Needle Thread", cat:"车缝", detail:"缝纫机上方的线"},
+  {cn:"底线", en:"Bobbin Thread", cat:"车缝", detail:"缝纫机梭芯中的线"},
+  {cn:"面缝线", en:"Topstitch", cat:"车缝", detail:"从面料正面可见的装饰缝线"},
+  {cn:"边缘缝线", en:"Edgestitch", cat:"车缝", detail:"紧贴边缘的缝线"},
+  {cn:"暗缝线", en:"Understitch", cat:"车缝", detail:"在贴边内侧以防止外翻的缝线"},
+  {cn:"链缝", en:"Chain Stitch", cat:"车缝", detail:"链式线迹，一面是直线一面是链条"},
+  {cn:"碎褶", en:"Gather / Shirr", cat:"车缝", detail:"将布料抽褶形成蓬松效果"},
+  {cn:"缝份", en:"Seam Allowance", cat:"车缝", detail:"缝合线到布边的距离"},
+  {cn:"下摆缝", en:"Hemming", cat:"车缝", detail:"折叠缝合衣服底部边缘"},
+  {cn:"上橡筋", en:"Elastic Setting", cat:"车缝", detail:"将松紧带缝入腰头或袖口"},
+
+  // === 八、洗水 ===
+  {cn:"洗水", en:"Garment Washing", cat:"洗水", detail:"对成衣进行水洗加工，获得特定手感、颜色或缩水率"},
+  {cn:"洗水配方", en:"Wash Formula", cat:"洗水", detail:"每个制单颜色对应的洗水工艺参数(温度、时间、化学配比)"},
+  {cn:"条款码", en:"Clause Code (CLAUSE_CODE)", cat:"洗水", detail:"同一制单+颜色下多版本配方的唯一标识"},
+  {cn:"布兜", en:"Wash Bag / Process Lot", cat:"洗水", detail:"装载成衣送入洗水机的物理容器"},
+  {cn:"洗水交收", en:"Wash Handover", cat:"洗水", detail:"洗水车间与生产车间之间的布兜交接操作"},
+  {cn:"普通洗水", en:"Normal Wash / Garment Wash", cat:"洗水", detail:"常规水洗，去除杂质并使面料自然回缩"},
+  {cn:"酵素洗", en:"Enzyme Wash", cat:"洗水", detail:"使用酵素去除面料表面绒毛的洗水工艺"},
+  {cn:"石洗", en:"Stone Wash", cat:"洗水", detail:"用浮石打磨面料产生陈旧感"},
+  {cn:"酸洗", en:"Acid Wash", cat:"洗水", detail:"用酸性处理产生不均匀褪色效果"},
+  {cn:"漂洗", en:"Bleach Wash", cat:"洗水", detail:"使用漂白剂的洗水工艺"},
+  {cn:"雪花洗", en:"Snow Wash", cat:"洗水", detail:"用浮石浸泡漂白剂产生雪花状效果"},
+  {cn:"砂洗", en:"Sand Wash", cat:"洗水", detail:"用砂粒磨洗产生柔软绒面"},
+  {cn:"套色/染色洗", en:"Overdye / Pigment Wash", cat:"洗水", detail:"在成衣上额外染色"},
+  {cn:"柔软处理", en:"Softening", cat:"洗水", detail:"使用柔软剂使面料更加柔软"},
+  {cn:"硅油处理", en:"Silicon Softener", cat:"洗水", detail:"用硅油柔软剂处理面料"},
+  {cn:"防缩处理", en:"Anti-shrinkage Treatment", cat:"洗水", detail:"减少面料缩水率的处理"},
+  {cn:"定型/热定型", en:"Heat Setting", cat:"洗水", detail:"通过加热使面料定型"},
+  {cn:"脱水", en:"Hydroextraction / Centrifuge", cat:"洗水", detail:"用离心力去除布料水分"},
+  {cn:"烘干", en:"Tumble Dry / Drying", cat:"洗水", detail:"用烘干机干燥衣物"},
+  {cn:"洗水机", en:"Washing Machine / Washer-extractor", cat:"洗水", detail:"工业洗水设备"},
+  {cn:"烘干机", en:"Drying Machine / Tumbler", cat:"洗水", detail:"工业烘干设备"},
+  {cn:"浮石", en:"Pumice Stone", cat:"洗水", detail:"石洗工艺中使用的火山石"},
+  {cn:"酵素", en:"Enzyme", cat:"洗水", detail:"用于酵素洗的生物酶制剂"},
+  {cn:"漂水", en:"Sodium Hypochlorite / Bleach", cat:"洗水", detail:"漂白剂的主要成分"},
+  {cn:"高锰酸钾", en:"Potassium Permanganate", cat:"洗水", detail:"用于酸洗和雪花洗的化学剂"},
+  {cn:"手感", en:"Hand Feel", cat:"洗水", detail:"面料的触摸质感"},
+  {cn:"洗水缩率", en:"Washing Shrinkage", cat:"洗水", detail:"洗水前后的尺寸变化率"},
+  {cn:"扭度", en:"Twisting / Spirality", cat:"洗水", detail:"洗水后衣服扭曲变形的程度"},
+  {cn:"洗水程序", en:"Wash Program / Recipe", cat:"洗水", detail:"洗水机器的工艺参数设定"},
+
+  // === 九、烧菲发卡 ===
+  {cn:"烧菲卡", en:"Burn Card", cat:"烧菲发卡", detail:"生成扎牌的操作卡片"},
+  {cn:"菲卡/工艺卡", en:"Bundle Card / Job Card", cat:"烧菲发卡", detail:"绑定到扎号的RFID卡或纸菲"},
+  {cn:"补卡/换卡", en:"Card Replacement", cat:"烧菲发卡", detail:"RFID卡损坏或丢失时更换新卡"},
+  {cn:"批量烧菲", en:"Batch Burning", cat:"烧菲发卡", detail:"一次性批量生成扎牌的操作"},
+  {cn:"重置菲卡", en:"Bundle Reset", cat:"烧菲发卡", detail:"重置扎牌的状态信息"},
+  {cn:"合并菲卡", en:"Bundle Merge", cat:"烧菲发卡", detail:"将多个扎牌合并为一个"},
+  {cn:"拆分菲卡", en:"Bundle Split", cat:"烧菲发卡", detail:"将一个扎牌拆分为多个"},
+  {cn:"打印菲卡", en:"Print Bundle Card", cat:"烧菲发卡", detail:"打印扎牌标签"},
+  {cn:"补打印", en:"Reprint Card", cat:"烧菲发卡", detail:"重新打印扎牌"},
+  {cn:"重新烧菲", en:"Re-burning", cat:"烧菲发卡", detail:"对已烧菲的裁片重新生成扎牌"},
+  {cn:"作废菲卡", en:"Void Card", cat:"烧菲发卡", detail:"使扎牌失效不可用"},
+  {cn:"退役菲卡", en:"Retire Card", cat:"烧菲发卡", detail:"将扎牌标记为退役状态"},
+  {cn:"单独烧菲", en:"Separate Burning (KIND=1)", cat:"烧菲发卡", detail:"特殊幅位的独立烧菲"},
+  {cn:"额外工序烧菲", en:"Extra Step Burning (KIND=7)", cat:"烧菲发卡", detail:"正常工序之外增加额外烧菲，需审批"},
+  {cn:"尾部发卡", en:"Tail-End Card Issuing (KIND=4)", cat:"烧菲发卡", detail:"洗水后或后整阶段的二次烧菲"},
+  {cn:"返回烧菲", en:"Rework Burning (KIND=5)", cat:"烧菲发卡", detail:"不合格品返工后的重新烧菲"},
+  {cn:"发卡机", en:"Card Issuing Machine", cat:"烧菲发卡", detail:"用于分配RFID卡号的硬件设备"},
+
+  // === 十、品质管理 ===
+  {cn:"可接收品质限", en:"AQL (Acceptable Quality Limit)", cat:"品质管理", detail:"国际通用的抽样检验标准"},
+  {cn:"决定性缺陷", en:"Critical Defect", cat:"品质管理", detail:"致命性缺陷，不论比率多少直接判NG"},
+  {cn:"疵点", en:"Defect", cat:"品质管理", detail:"产品存在的不合格点或瑕疵"},
+  {cn:"不合格", en:"NG (Not Good)", cat:"品质管理", detail:"检验不合格"},
+  {cn:"三色灯", en:"Andon / Tri-Color Light", cat:"品质管理", detail:"车间品质信号：绿灯正常、黄灯警告、红灯停线"},
+  {cn:"场控", en:"Field Control", cat:"品质管理", detail:"管理人员手动控制三色灯颜色"},
+  {cn:"返工", en:"Rework", cat:"品质管理", detail:"对不合格品进行重新加工"},
+  {cn:"不合格品", en:"NC (Non-Conforming)", cat:"品质管理", detail:"不符合品质要求的产品"},
+  {cn:"巡检", en:"Patrol Inspection", cat:"品质管理", detail:"品质人员在车间巡回检查产品质量"},
+  {cn:"首检", en:"First Piece Inspection", cat:"品质管理", detail:"每款生产前的首件检验"},
+  {cn:"品管", en:"QC (Quality Control)", cat:"品质管理", detail:"品质控制，通过检验保证产品质量"},
+  {cn:"品保", en:"QA (Quality Assurance)", cat:"品质管理", detail:"品质保证，建立质量体系确保品质"},
+  {cn:"检验标准", en:"Inspection Standard", cat:"品质管理", detail:"品质检验的依据和准则"},
+  {cn:"抽样检验", en:"Sampling Inspection", cat:"品质管理", detail:"从批次中抽取样本进行检验"},
+  {cn:"全检", en:"100% Inspection", cat:"品质管理", detail:"对每个产品逐一检验"},
+  {cn:"抽检", en:"Random Inspection", cat:"品质管理", detail:"随机抽取部分产品检验"},
+  {cn:"正常检验", en:"Normal Inspection", cat:"品质管理", detail:"AQL标准下的常规检验水平"},
+  {cn:"加严检验", en:"Tightened Inspection", cat:"品质管理", detail:"品质不稳定时采取的更严格检验"},
+  {cn:"放宽检验", en:"Reduced Inspection", cat:"品质管理", detail:"品质长期稳定时放宽的检验"},
+  {cn:"疵点代码", en:"Defect Code", cat:"品质管理", detail:"各类疵点的标准编码"},
+  {cn:"车缝疵点", en:"Sewing Defect", cat:"品质管理", detail:"车缝过程中产生的品质缺陷"},
+  {cn:"面料疵点", en:"Fabric Defect", cat:"品质管理", detail:"面料本身存在的瑕疵"},
+  {cn:"脏污", en:"Stain / Soil", cat:"品质管理", detail:"产品上的污渍"},
+  {cn:"油污", en:"Oil Stain", cat:"品质管理", detail:"油渍污染"},
+  {cn:"黄变", en:"Yellowing", cat:"品质管理", detail:"面料变黄的现象"},
+  {cn:"跳线", en:"Skipped Stitch", cat:"品质管理", detail:"缝纫时跳过的针脚"},
+  {cn:"断线", en:"Broken Stitch", cat:"品质管理", detail:"缝线断裂"},
+  {cn:"起皱", en:"Puckering", cat:"品质管理", detail:"缝合处出现皱褶"},
+  {cn:"歪斜", en:"Twisted / Crooked", cat:"品质管理", detail:"缝位歪斜不正"},
+  {cn:"起球", en:"Pilling", cat:"品质管理", detail:"面料表面起小球"},
+  {cn:"勾纱", en:"Snagging", cat:"品质管理", detail:"面料被勾出纱线"},
+  {cn:"破洞", en:"Hole / Tear", cat:"品质管理", detail:"面料上的破洞或撕裂"},
+  {cn:"色差", en:"Color Difference / Shade Variation", cat:"品质管理", detail:"颜色不一致的差异"},
+  {cn:"质量报告", en:"Quality Report", cat:"品质管理", detail:"汇总品质数据的报告"},
+  {cn:"纠正措施", en:"Corrective Action", cat:"品质管理", detail:"针对品质问题的改进方案"},
+  {cn:"8D报告", en:"8D Report", cat:"品质管理", detail:"8个步骤的系统性问题解决方法"},
+  {cn:"鱼骨图", en:"Fishbone / Cause & Effect Diagram", cat:"品质管理", detail:"分析问题根本原因的图表"},
+  {cn:"首件确认", en:"First Article Approval", cat:"品质管理", detail:"生产前首件的批准确认"},
+  {cn:"质量追溯", en:"Quality Traceability", cat:"品质管理", detail:"通过系统追溯品质问题的源头"},
+  {cn:"疵点率", en:"Defect Rate", cat:"品质管理", detail:"疵点数占总检验数的比率"},
+  {cn:"合格率", en:"Pass Rate / Yield Rate", cat:"品质管理", detail:"合格品占总检验数的比率"},
+  {cn:"返工率", en:"Rework Rate", cat:"品质管理", detail:"需要返工的产品比例"},
+  {cn:"轻微/严重缺陷", en:"Minor / Major Defect", cat:"品质管理", detail:"缺陷按严重程度分级"},
+  {cn:"线上检验", en:"Inline Inspection", cat:"品质管理", detail:"生产过程中的实时品质检验"},
+  {cn:"品质预警", en:"Quality Alert / Early Warning", cat:"品质管理", detail:"系统自动发出的品质问题预警"},
+
+  // === 十一、验针 ===
+  {cn:"验针中心", en:"NDC (Needle Detection Center)", cat:"验针", detail:"负责包装检验和断针检测的部门"},
+  {cn:"手持验针机", en:"Handheld Needle Detector", cat:"验针", detail:"小型移动金属探测设备"},
+  {cn:"验针反应品", en:"Needle Detection Reaction Item", cat:"验针", detail:"验针机报警后需处理的异常品"},
+  {cn:"检测盲区", en:"Dead Zone", cat:"验针", detail:"验针机检测不到的区域"},
+  {cn:"断针", en:"Broken Needle", cat:"验针", detail:"缝纫中断裂的针"},
+  {cn:"金属碎片", en:"Metal Fragment", cat:"验针", detail:"验针机检测到的金属异物"},
+  {cn:"过针", en:"Pass Needle Detection", cat:"验针", detail:"通过检针机检验"},
+  {cn:"报警", en:"Alarm / Alert", cat:"验针", detail:"验针机检测到金属时发出的警报"},
+  {cn:"灵敏度测试", en:"Sensitivity Test", cat:"验针", detail:"定期测试验针机的检测灵敏度"},
+  {cn:"标准测试块", en:"Test Piece / Test Block", cat:"验针", detail:"用于校准验针机的标准金属片"},
+  {cn:"传送带", en:"Conveyor Belt", cat:"验针", detail:"验针机的输送带装置"},
+  {cn:"检针机", en:"Needle Detector / Metal Detector", cat:"验针", detail:"检测衣物中是否有断针的设备"},
+  {cn:"剔除装置", en:"Reject Device", cat:"验针", detail:"自动剔除含金属产品的装置"},
+  {cn:"铁/非铁检测", en:"Fe / Non-Fe Detection", cat:"验针", detail:"区分铁和非铁金属的检测模式"},
+
+  // === 十二、后整包装 ===
+  {cn:"后整", en:"Finishing", cat:"后整包装", detail:"车缝完成后到包装前的整烫、检验、整理等工序"},
+  {cn:"挂牌", en:"Hang Tag / Listing", cat:"后整包装", detail:"成衣上的SKU吊牌，包含品牌、款号、尺码等信息"},
+  {cn:"SKU编码", en:"SKU Code", cat:"后整包装", detail:"产品SKU编码，用于吊牌识别"},
+  {cn:"RFID吊牌", en:"RFID Hang Tag", cat:"后整包装", detail:"贴在单件产品上的RFID标签"},
+  {cn:"序列化", en:"SFC Serialization", cat:"后整包装", detail:"将批量SFC拆分为多个独立SFC(QTY=1)"},
+  {cn:"成品入库", en:"FG Receipt (Finished Goods Receipt)", cat:"后整包装", detail:"成品进入仓库并记录"},
+  {cn:"成品仓库", en:"WMS-FG", cat:"后整包装", detail:"成品仓库管理系统"},
+  {cn:"整烫", en:"Ironing / Pressing", cat:"后整包装", detail:"对成衣进行熨烫整形的工序"},
+  {cn:"烫台", en:"Ironing Table / Pressing Table", cat:"后整包装", detail:"用于整烫的工作台"},
+  {cn:"蒸汽熨斗", en:"Steam Iron", cat:"后整包装", detail:"使用蒸汽的熨烫工具"},
+  {cn:"蒸汽发生器", en:"Steam Generator", cat:"后整包装", detail:"产生蒸汽供熨斗使用的设备"},
+  {cn:"折衫", en:"Folding", cat:"后整包装", detail:"将衣服折叠整齐"},
+  {cn:"配片/配对", en:"Pairing / Matching", cat:"后整包装", detail:"将配套的衣服配在一起"},
+  {cn:"贴标签", en:"Labeling / Sticking Label", cat:"后整包装", detail:"在包装或产品上贴标签"},
+  {cn:"装胶袋", en:"Bagging / Polybagging", cat:"后整包装", detail:"将衣服装入塑料袋"},
+  {cn:"打包装箱", en:"Carton Packing", cat:"后整包装", detail:"将衣服装入纸箱"},
+  {cn:"封箱", en:"Carton Sealing", cat:"后整包装", detail:"封好纸箱"},
+  {cn:"打带", en:"Strapping / Packing Belt", cat:"后整包装", detail:"用打包带捆扎纸箱"},
+  {cn:"码板", en:"Palletizing", cat:"后整包装", detail:"将纸箱堆叠在托盘上"},
+  {cn:"外箱", en:"Master Carton / Outer Carton", cat:"后整包装", detail:"装货的外层纸箱"},
+  {cn:"内盒", en:"Inner Box", cat:"后整包装", detail:"内部的包装盒"},
+  {cn:"箱唛", en:"Carton Label / Carton Mark", cat:"后整包装", detail:"贴在纸箱上的标签"},
+  {cn:"毛重", en:"Gross Weight (G.W.)", cat:"后整包装", detail:"包含包装的总重量"},
+  {cn:"净重", en:"Net Weight (N.W.)", cat:"后整包装", detail:"产品本身的重量"},
+  {cn:"混款装箱", en:"Assorted Packing", cat:"后整包装", detail:"不同款式混合装箱"},
+  {cn:"独款装箱", en:"Solid Packing", cat:"后整包装", detail:"同一款式单独装箱"},
+  {cn:"挂装", en:"Hanging Pack", cat:"后整包装", detail:"衣架挂装方式出货"},
+  {cn:"平装", en:"Flat Pack", cat:"后整包装", detail:"折叠平放包装出货"},
+  {cn:"干燥剂", en:"Desiccant / Silica Gel", cat:"后整包装", detail:"放置在包装内的防潮剂"},
+  {cn:"包装指示", en:"Packing Instruction", cat:"后整包装", detail:"客户要求的包装方式和标准"},
+  {cn:"条码标签", en:"Barcode Label", cat:"后整包装", detail:"印有条码的标签"},
+
+  // === 十三、外发管理 ===
+  {cn:"外发", en:"Subcontracting", cat:"外发管理", detail:"将部分工序发给外部供应商加工"},
+  {cn:"海关备案", en:"Customs Registration", cat:"外发管理", detail:"向海关报备外发加工信息"},
+  {cn:"送货单", en:"Delivery Note", cat:"外发管理", detail:"外发货物出厂的凭证，记录货物明细"},
+  {cn:"电子放行条", en:"E-Release Pass", cat:"外发管理", detail:"货物出厂的电子通行证，门卫凭此放行"},
+  {cn:"电子交收系统", en:"E-Delivery System", cat:"外发管理", detail:"海关监管下的电子交收管理平台"},
+  {cn:"载具/胶框", en:"Process Lot / Container", cat:"外发管理", detail:"装箱装载的物理容器"},
+  {cn:"外发装箱", en:"Subcontract Packing", cat:"外发管理", detail:"将外发产品装箱并记录明细"},
+  {cn:"外发供应商", en:"Subcontractor / Vendor", cat:"外发管理", detail:"承接外发加工的外部工厂"},
+  {cn:"外发合同", en:"Subcontract Agreement", cat:"外发管理", detail:"与外发供应商的加工合同"},
+  {cn:"发外", en:"Send Out / Issue to Subcontractor", cat:"外发管理", detail:"将货物发给外发供应商"},
+  {cn:"收货", en:"Receive from Subcontractor", cat:"外发管理", detail:"从外发供应商处收回加工品"},
+  {cn:"退货", en:"Return / Reject", cat:"外发管理", detail:"退回不合格的外发加工品"},
+  {cn:"外发跟踪", en:"Subcontracting Tracking", cat:"外发管理", detail:"跟踪外发进度和回货情况"},
+  {cn:"加工费", en:"Processing Fee", cat:"外发管理", detail:"支付给外发供应商的加工费用"},
+  {cn:"返货", en:"Return of Goods", cat:"外发管理", detail:"外发供应商将货物返送回工厂"},
+  {cn:"外发订单", en:"Subcontract Order", cat:"外发管理", detail:"管理外发业务的订单"},
+  {cn:"外发收货", en:"Subcontract Receipt", cat:"外发管理", detail:"外发加工品的收货操作"},
+  {cn:"待回货", en:"Outstanding Return", cat:"外发管理", detail:"已发出但尚未收回的货物"},
+
+  // === 十四、设备管理 ===
+  {cn:"设备台账", en:"Equipment Ledger", cat:"设备管理", detail:"MES中所有生产设备的基础信息档案"},
+  {cn:"故障代码", en:"Fault Code", cat:"设备管理", detail:"设备故障类型的标准编码"},
+  {cn:"保养项目", en:"Maintenance Item", cat:"设备管理", detail:"设备定期保养的内容和标准"},
+  {cn:"维修单号", en:"Repair No. (REPAIR_NO)", cat:"设备管理", detail:"格式R+六位日期+四位流水号"},
+  {cn:"委外维修", en:"Outsourced Repair", cat:"设备管理", detail:"委托外部供应商执行维修"},
+  {cn:"定期保养", en:"PM (Preventive Maintenance)", cat:"设备管理", detail:"按计划周期自动生成的保养任务"},
+  {cn:"实时保养", en:"Real-time Maintenance", cat:"设备管理", detail:"非计划性的即时保养操作"},
+  {cn:"零配件", en:"Spare Parts", cat:"设备管理", detail:"设备维修或保养所使用的备件"},
+  {cn:"设备综合效率", en:"OEE (Overall Equipment Effectiveness)", cat:"设备管理", detail:"OEE=时间开动率×性能开动率×合格品率"},
+  {cn:"自动导引车", en:"AGV (Automated Guided Vehicle)", cat:"设备管理", detail:"自动导引运输车"},
+  {cn:"转款", en:"Model Changeover", cat:"设备管理", detail:"缝纫机切换款式时调整机器参数"},
+  {cn:"数采平台", en:"Data Collection Platform", cat:"设备管理", detail:"采集设备PLC/传感器数据的平台"},
+  {cn:"设备状态", en:"Equipment Status", cat:"设备管理", detail:"运行中/停机/空闲/维修中等状态"},
+  {cn:"报修", en:"Report Fault / Repair Request", cat:"设备管理", detail:"员工报告设备故障"},
+  {cn:"派工维修", en:"Assign Repair Task", cat:"设备管理", detail:"将维修任务分配给机修员"},
+  {cn:"维修完成", en:"Repair Completed", cat:"设备管理", detail:"维修任务完成确认"},
+  {cn:"故障描述", en:"Fault Description", cat:"设备管理", detail:"设备的故障现象描述"},
+  {cn:"根本原因", en:"Root Cause", cat:"设备管理", detail:"导致故障的根本原因分析"},
+  {cn:"维修记录", en:"Maintenance Record", cat:"设备管理", detail:"历史维修操作记录"},
+  {cn:"保养计划", en:"PM Schedule / Maintenance Plan", cat:"设备管理", detail:"定期保养的计划排期"},
+  {cn:"点检", en:"Routine Check / Patrol", cat:"设备管理", detail:"日常设备检查"},
+  {cn:"更换配件", en:"Replace Spare Part", cat:"设备管理", detail:"维修时更换损坏的零件"},
+  {cn:"设备校准", en:"Equipment Calibration", cat:"设备管理", detail:"校准设备精度和参数"},
+  {cn:"设备停机", en:"Machine Breakdown / Downtime", cat:"设备管理", detail:"设备因故障停止运行"},
+  {cn:"平均维修时间", en:"MTTR (Mean Time To Repair)", cat:"设备管理", detail:"平均修复时间"},
+  {cn:"平均故障间隔", en:"MTBF (Mean Time Between Failures)", cat:"设备管理", detail:"平均故障间隔时间"},
+  {cn:"紧急维修", en:"Emergency Repair", cat:"设备管理", detail:"突发故障的紧急修理"},
+  {cn:"润滑", en:"Lubrication", cat:"设备管理", detail:"设备加油润滑保养"},
+  {cn:"设备验收", en:"Equipment Acceptance", cat:"设备管理", detail:"新设备安装后的验收流程"},
+
+  // === 十五、考勤与效率 ===
+  {cn:"班次", en:"Shift", cat:"考勤与效率", detail:"一天中定义的工作时间段"},
+  {cn:"工作中心", en:"Work Center", cat:"考勤与效率", detail:"MES中部门→车间→组别的组织架构单元"},
+  {cn:"效率", en:"Efficiency", cat:"考勤与效率", detail:"员工实际产出与标准工时的比值"},
+  {cn:"本位效率", en:"Standard Efficiency (STD_FLAG=1)", cat:"考勤与效率", detail:"员工在本职工作上的效率"},
+  {cn:"非本位效率", en:"Non-standard Efficiency", cat:"考勤与效率", detail:"员工在非本位工作上的效率"},
+  {cn:"标准允许小时数", en:"SAH (Standard Allowed Hours)", cat:"考勤与效率", detail:"标准允许小时数，常用于回工等场景"},
+  {cn:"非本位时间", en:"Non-standard Time", cat:"考勤与效率", detail:"员工从事非本职工作的时间(开会/培训)"},
+  {cn:"回工", en:"Idle Time / Lay-off Time", cat:"考勤与效率", detail:"员工没有工作可做时离岗的时间"},
+  {cn:"虚拟制单", en:"MO0001 (Virtual Order)", cat:"考勤与效率", detail:"填充'上班但没做货'空白时间的虚拟制单"},
+  {cn:"人力资源系统", en:"FHIS", cat:"考勤与效率", detail:"工厂人力资源信息系统"},
+  {cn:"早班", en:"Morning Shift / Day Shift", cat:"考勤与效率", detail:"通常早上开始工作的班次"},
+  {cn:"中班", en:"Middle Shift / Swing Shift", cat:"考勤与效率", detail:"介于早晚班之间的班次"},
+  {cn:"晚班", en:"Night Shift", cat:"考勤与效率", detail:"夜间工作的班次"},
+  {cn:"加班", en:"Overtime", cat:"考勤与效率", detail:"超出正常工时的额外工作"},
+  {cn:"迟到", en:"Late / Tardy", cat:"考勤与效率", detail:"上班迟到"},
+  {cn:"早退", en:"Early Leave", cat:"考勤与效率", detail:"提前下班"},
+  {cn:"旷工", en:"Absent / No Show", cat:"考勤与效率", detail:"无故缺勤"},
+  {cn:"请假", en:"Leave Request", cat:"考勤与效率", detail:"申请休假"},
+  {cn:"事假", en:"Personal Leave", cat:"考勤与效率", detail:"因私事请假"},
+  {cn:"病假", en:"Sick Leave", cat:"考勤与效率", detail:"因病请假"},
+  {cn:"年假", en:"Annual Leave", cat:"考勤与效率", detail:"带薪年假"},
+  {cn:"打卡/刷卡", en:"Punch / Swipe Card", cat:"考勤与效率", detail:"在终端机刷卡记录考勤"},
+  {cn:"考勤记录", en:"Attendance Record", cat:"考勤与效率", detail:"员工的打卡和出勤记录"},
+  {cn:"实际产出", en:"Actual Output", cat:"考勤与效率", detail:"员工实际完成的产品数量"},
+  {cn:"目标产量", en:"Target Output", cat:"考勤与效率", detail:"设定的产量目标"},
+  {cn:"每小时产量", en:"UPH (Units Per Hour)", cat:"考勤与效率", detail:"每小时生产件数"},
+  {cn:"出勤报表", en:"Attendance Report", cat:"考勤与效率", detail:"汇总考勤数据的报告"},
+
+  // === 十六、产前 ===
+  {cn:"产前会议", en:"Pre-Production Meeting (PPM)", cat:"产前", detail:"生产前各部门确认工艺和要求的会议"},
+  {cn:"产前样", en:"PP Sample (Pre-Production Sample)", cat:"产前", detail:"大货前制作的产前样品"},
+  {cn:"尺码样", en:"Size Set Sample", cat:"产前", detail:"所有尺码的样品一套"},
+  {cn:"销售样", en:"Salesman Sample (SM)", cat:"产前", detail:"给客户展示的销售样品"},
+  {cn:"船头样", en:"Shipment Sample / TOP Sample", cat:"产前", detail:"大货产中或产后寄给客户的确认样"},
+  {cn:"照相样", en:"Photo Shoot Sample", cat:"产前", detail:"用于拍摄目录的样品"},
+  {cn:"批办/确认样", en:"Approval Sample", cat:"产前", detail:"经客户批准的最终样品"},
+  {cn:"工艺单", en:"Tech Pack / Specification Sheet", cat:"产前", detail:"产品工艺要求的详细文件"},
+  {cn:"生产单", en:"Production Sheet / Work Sheet", cat:"产前", detail:"指导车间生产的单据"},
+  {cn:"物料清单", en:"BOM (Bill of Materials)", cat:"产前", detail:"产品所需所有物料的清单"},
+  {cn:"用料表", en:"Material List", cat:"产前", detail:"生产所需物料的明细列表"},
+  {cn:"工艺流程图", en:"Process Flow Chart", cat:"产前", detail:"生产流程的图表化展示"},
+  {cn:"排期图", en:"Production Schedule / Timeline", cat:"产前", detail:"生产各阶段的时间安排"},
+  {cn:"封样", en:"Sealed Sample / Counter Sample", cat:"产前", detail:"封存的标准样品，用于对比"},
+  {cn:"色卡/色办", en:"Lab Dip", cat:"产前", detail:"面料颜色的打板确认样"},
+  {cn:"辅料卡", en:"Trim Card", cat:"产前", detail:"展示所有辅料的样品卡"},
+  {cn:"尺寸表", en:"Size Specification / Measurement Chart", cat:"产前", detail:"各尺码的详细尺寸要求"},
+
+  // === 十七、STI无缝针织 ===
+  {cn:"圣东尼无缝针织", en:"STI (Santoni)", cat:"STI无缝针织", detail:"圣东尼无缝针织机及对应生产模块"},
+  {cn:"织机控制系统", en:"Nautilus", cat:"STI无缝针织", detail:"织机控制系统，MES与之交互"},
+  {cn:"工艺单", en:"Tech Sheet / Tech Pack", cat:"STI无缝针织", detail:"STI织机的'图纸'，包含纱线织法尺寸参数"},
+  {cn:"查片", en:"Panel Inspection", cat:"STI无缝针织", detail:"对织出的布片进行质量检查和点数"},
+  {cn:"度尺", en:"Dimensional Check", cat:"STI无缝针织", detail:"测量布片尺寸是否合格的检查"},
+  {cn:"余好片", en:"Leftover Good Panels", cat:"STI无缝针织", detail:"分PO后剩余的好片"},
+  {cn:"虚拟员工", en:"Virtual Employee", cat:"STI无缝针织", detail:"织机自动生产使用的虚拟工号"},
+  {cn:"织机程序", en:"Knitting Program", cat:"STI无缝针织", detail:"织机的编织程序文件"},
+  {cn:"纱嘴", en:"Yarn Feeder", cat:"STI无缝针织", detail:"织机中输送纱线的装置"},
+  {cn:"针筒", en:"Needle Cylinder", cat:"STI无缝针织", detail:"织机上的针筒部件"},
+  {cn:"织针", en:"Knitting Needle", cat:"STI无缝针织", detail:"编织用的织针"},
+  {cn:"纱线支数", en:"Yarn Count", cat:"STI无缝针织", detail:"表示纱线粗细的指标"},
+  {cn:"线圈", en:"Stitch / Loop", cat:"STI无缝针织", detail:"针织的最小单位，一个线圈"},
+  {cn:"落布", en:"Doffing / Take Down", cat:"STI无缝针织", detail:"将织好的布片从机器取下"},
+  {cn:"织疵", en:"Knitting Defect", cat:"STI无缝针织", detail:"编织过程中产生的疵点"},
+
+  // === 十八、船务物流 ===
+  {cn:"船务", en:"Shipping / Logistics", cat:"船务物流", detail:"安排货物运输和出口的事务"},
+  {cn:"预计离港日", en:"ETD (Estimated Time of Departure)", cat:"船务物流", detail:"预计船/航班离港日期"},
+  {cn:"预计到港日", en:"ETA (Estimated Time of Arrival)", cat:"船务物流", detail:"预计船/航班到港日期"},
+  {cn:"离岸价", en:"FOB (Free on Board)", cat:"船务物流", detail:"卖方将货物交到指定装运港的价格条款"},
+  {cn:"到岸价", en:"CIF (Cost, Insurance & Freight)", cat:"船务物流", detail:"含成本、保险和运费的价格条款"},
+  {cn:"装货", en:"Container Loading / Stuffing", cat:"船务物流", detail:"将货物装入集装箱"},
+  {cn:"出货", en:"Shipment / Dispatch", cat:"船务物流", detail:"将货物发出"},
+  {cn:"提单", en:"Bill of Lading (B/L)", cat:"船务物流", detail:"海运提货凭证"},
+  {cn:"装箱单", en:"Packing List", cat:"船务物流", detail:"装箱明细清单"},
+  {cn:"发票", en:"Invoice", cat:"船务物流", detail:"商业发票"},
+  {cn:"信用证", en:"Letter of Credit (L/C)", cat:"船务物流", detail:"银行担保的支付方式"},
+  {cn:"电汇", en:"T/T (Telegraphic Transfer)", cat:"船务物流", detail:"通过银行电汇付款"},
+  {cn:"产地证", en:"Certificate of Origin", cat:"船务物流", detail:"证明货物产地的官方文件"},
+  {cn:"报关", en:"Customs Declaration", cat:"船务物流", detail:"向海关申报出口货物"},
+  {cn:"清关", en:"Customs Clearance", cat:"船务物流", detail:"海关放行货物"},
+  {cn:"货柜", en:"Container", cat:"船务物流", detail:"海运集装箱"},
+  {cn:"拼柜", en:"LCL (Less than Container Load)", cat:"船务物流", detail:"多个货主的货拼一个柜"},
+  {cn:"整柜", en:"FCL (Full Container Load)", cat:"船务物流", detail:"一个货主装满整柜"},
+  {cn:"目的港", en:"Port of Destination", cat:"船务物流", detail:"货物最终到达的港口"},
+  {cn:"运费", en:"Freight Cost", cat:"船务物流", detail:"运输费用"},
+  {cn:"唛头", en:"Shipping Mark", cat:"船务物流", detail:"货物外箱上的运输标识"},
+  {cn:"柜号", en:"Container No.", cat:"船务物流", detail:"集装箱的编号"},
+  {cn:"封条号", en:"Seal No.", cat:"船务物流", detail:"集装箱封条号码"},
+  {cn:"装货港", en:"Port of Loading", cat:"船务物流", detail:"货物装运的港口"},
+  {cn:"报关单", en:"Customs Declaration Form", cat:"船务物流", detail:"向海关提交的申报表单"},
+
+  // === 十九、终端与系统 ===
+  {cn:"终端机", en:"Terminal", cat:"终端与系统", detail:"部署在车间的刷卡设备，用于考勤/过站/报修"},
+  {cn:"终端机类型", en:"Terminal Type (KIND_ID)", cat:"终端与系统", detail:"A=普通机/B=考勤机/C=公共回工机/D=印花机/E=小组计件机"},
+  {cn:"普通机", en:"Type A Terminal", cat:"终端与系统", detail:"单员工使用的标准终端机"},
+  {cn:"小组计件机", en:"Type E Terminal", cat:"终端与系统", detail:"支持多人同时登录、小组计件的终端机"},
+  {cn:"员工卡", en:"Employee Card", cat:"终端与系统", detail:"员工身份识别的RFID卡"},
+  {cn:"货卡", en:"Product Card", cat:"终端与系统", detail:"扎牌或吊牌等代表生产对象的卡"},
+  {cn:"管理卡", en:"Admin Card", cat:"终端与系统", detail:"班长/组长用于配置终端机或退出的特殊卡"},
+  {cn:"刷卡过站", en:"Swipe & Cross Station", cat:"终端与系统", detail:"工人在终端机刷卡完成工序过站"},
+  {cn:"产量记录", en:"Output / Production Recording", cat:"终端与系统", detail:"记录员工完成的产品数量"},
+  {cn:"登录", en:"Login / Sign In", cat:"终端与系统", detail:"系统登录操作"},
+  {cn:"登出", en:"Logout / Sign Out", cat:"终端与系统", detail:"系统退出操作"},
+  {cn:"查询", en:"Search / Query", cat:"终端与系统", detail:"在系统中搜索信息"},
+  {cn:"新增", en:"Add / Create / New", cat:"终端与系统", detail:"新建一条记录"},
+  {cn:"保存", en:"Save", cat:"终端与系统", detail:"保存当前数据"},
+  {cn:"修改", en:"Edit / Modify", cat:"终端与系统", detail:"修改已有数据"},
+  {cn:"删除", en:"Delete / Remove", cat:"终端与系统", detail:"删除数据"},
+  {cn:"确认", en:"Confirm", cat:"终端与系统", detail:"确认操作"},
+  {cn:"取消", en:"Cancel", cat:"终端与系统", detail:"取消操作"},
+  {cn:"提交", en:"Submit", cat:"终端与系统", detail:"提交数据"},
+  {cn:"审批", en:"Approve", cat:"终端与系统", detail:"审批通过"},
+  {cn:"驳回", en:"Reject", cat:"终端与系统", detail:"驳回申请"},
+  {cn:"打印", en:"Print", cat:"终端与系统", detail:"打印文档或标签"},
+  {cn:"导出", en:"Export", cat:"终端与系统", detail:"将数据导出为文件"},
+  {cn:"导入", en:"Import", cat:"终端与系统", detail:"从文件导入数据"},
+  {cn:"同步", en:"Synchronize / Sync", cat:"终端与系统", detail:"系统之间的数据同步更新"},
+
+  // === 二十、常见动词 ===
+  {cn:"生产", en:"Produce / Manufacture", cat:"常见动词", detail:"制造产品"},
+  {cn:"检查", en:"Inspect / Check", cat:"常见动词", detail:"检查产品质量"},
+  {cn:"记录", en:"Record / Log", cat:"常见动词", detail:"记录数据"},
+  {cn:"跟踪", en:"Track / Trace", cat:"常见动词", detail:"跟踪生产进度"},
+  {cn:"更新", en:"Update", cat:"常见动词", detail:"更新信息"},
+  {cn:"分配", en:"Assign / Allocate", cat:"常见动词", detail:"分配任务或资源"},
+  {cn:"扫描", en:"Scan", cat:"常见动词", detail:"扫描条码或RFID"},
+  {cn:"操作", en:"Operate", cat:"常见动词", detail:"操作机器或系统"},
+  {cn:"监控", en:"Monitor", cat:"常见动词", detail:"实时监控生产过程"},
+  {cn:"生成", en:"Generate", cat:"常见动词", detail:"系统生成单据或报告"},
+  {cn:"处理", en:"Process / Handle", cat:"常见动词", detail:"处理事务"},
+  {cn:"通知", en:"Notify / Inform", cat:"常见动词", detail:"通知相关人员"},
+  {cn:"审核", en:"Review / Audit", cat:"常见动词", detail:"审核数据或流程"},
+  {cn:"执行", en:"Execute / Perform", cat:"常见动词", detail:"执行操作或任务"},
+  {cn:"完成", en:"Complete / Finish", cat:"常见动词", detail:"完成任务"},
+  {cn:"开始", en:"Start / Begin", cat:"常见动词", detail:"开始生产或操作"},
+  {cn:"停止", en:"Stop / Halt", cat:"常见动词", detail:"停止生产或机器"},
+  {cn:"转移", en:"Transfer / Move", cat:"常见动词", detail:"转移物料或产品"},
+  {cn:"接收", en:"Receive", cat:"常见动词", detail:"接收货物"},
+  {cn:"发出", en:"Issue", cat:"常见动词", detail:"发出物料或指令"},
+  {cn:"下达", en:"Release", cat:"常见动词", detail:"下达订单或任务"},
+  {cn:"关闭", en:"Close", cat:"常见动词", detail:"关闭单据或任务"},
+
+  // === 二十一、角色部门 ===
+  {cn:"制造执行系统", en:"MES (Manufacturing Execution System)", cat:"角色部门", detail:"从订单到成品的全过程管理系统"},
+  {cn:"工业工程师", en:"IE Engineer (Industrial Engineer)", cat:"角色部门", detail:"制定标准工时和工艺路线的工程师"},
+  {cn:"生产计划员", en:"PPC (Production Planning & Control)", cat:"角色部门", detail:"负责排产和订单管理的部门"},
+  {cn:"品质工程师", en:"Quality Engineer", cat:"角色部门", detail:"负责品质标准和检验的工程师"},
+  {cn:"裁床", en:"Cutting Bed Department", cat:"角色部门", detail:"裁剪车间/裁床部门"},
+  {cn:"车缝车间", en:"Sewing Workshop", cat:"角色部门", detail:"进行车缝工序的生产车间"},
+  {cn:"洗水车间", en:"Washing Workshop", cat:"角色部门", detail:"进行洗水工序的车间"},
+  {cn:"后整车间", en:"Finishing Workshop", cat:"角色部门", detail:"后整理和包装车间"},
+  {cn:"验针中心", en:"NDC", cat:"角色部门", detail:"金属检测和包装检验部门"},
+  {cn:"供应商", en:"Supplier / Vendor", cat:"角色部门", detail:"提供原材料或外发服务的厂商"},
+  {cn:"生产主管", en:"Production Manager / Supervisor", cat:"角色部门", detail:"管理生产车间的负责人"},
+  {cn:"组长/拉长", en:"Line Leader / Team Leader", cat:"角色部门", detail:"生产线的直接管理者"},
+  {cn:"机修员", en:"Mechanic / Technician", cat:"角色部门", detail:"负责设备维修的技术人员"},
+  {cn:"车缝工", en:"Operator / Sewing Worker", cat:"角色部门", detail:"操作缝纫机的工人"},
+  {cn:"质检员", en:"QC Inspector", cat:"角色部门", detail:"检查产品质量的检验员"},
+  {cn:"包装工", en:"Packer", cat:"角色部门", detail:"负责包装的工人"},
+  {cn:"裁工", en:"Cutter", cat:"角色部门", detail:"操作裁剪设备的工人"},
+  {cn:"拉布工", en:"Spreader", cat:"角色部门", detail:"操作拉布机的工人"},
+  {cn:"仓管员", en:"Warehouse Keeper", cat:"角色部门", detail:"管理仓库的员工"},
+  {cn:"船务文员", en:"Shipping Clerk", cat:"角色部门", detail:"处理船务出口的员工"},
+
+  // === 二十二、状态描述 ===
+  {cn:"在产/在制品", en:"In Production / WIP", cat:"状态描述", detail:"产品正在生产或流转中"},
+  {cn:"已完成", en:"Completed / Finished", cat:"状态描述", detail:"生产已完成"},
+  {cn:"待处理", en:"Pending", cat:"状态描述", detail:"等待处理"},
+  {cn:"未完成", en:"Outstanding / Unfinished", cat:"状态描述", detail:"尚未完成"},
+  {cn:"合格", en:"OK / Pass / Accepted", cat:"状态描述", detail:"检验合格"},
+  {cn:"不合格", en:"NG / Fail / Rejected", cat:"状态描述", detail:"检验不合格"},
+  {cn:"待检", en:"To-be-inspected", cat:"状态描述", detail:"等待品质检验"},
+  {cn:"已检验", en:"Inspected", cat:"状态描述", detail:"已经过检验"},
+  {cn:"已锁定", en:"Locked", cat:"状态描述", detail:"数据已被锁定不可修改"},
+  {cn:"有效", en:"Active / Effective / Valid", cat:"状态描述", detail:"当前有效的状态"},
+  {cn:"无效", en:"Inactive / Void", cat:"状态描述", detail:"已失效或无效"},
+  {cn:"暂停", en:"Suspended / On Hold", cat:"状态描述", detail:"暂时中止"},
+  {cn:"正常", en:"Normal", cat:"状态描述", detail:"一切正常"},
+  {cn:"异常", en:"Abnormal / Anomaly", cat:"状态描述", detail:"出现异常情况"},
+  {cn:"紧急", en:"Urgent", cat:"状态描述", detail:"需要紧急处理"},
+  {cn:"逾期", en:"Overdue", cat:"状态描述", detail:"超过期限"},
+
+  // === 二十三、场景对话 ===
+  {cn:"介绍MES", en:"'MES stands for Manufacturing Execution System. It tracks and manages production in real time.'", cat:"场景对话", detail:"向外国同事介绍MES系统"},
+  {cn:"解释SO/MO", en:"'The Sales Order is from the customer. The MES Order is how we organize production internally.'", cat:"场景对话", detail:"客户视角 vs 工厂视角"},
+  {cn:"解释工艺路线", en:"'The routing is like a roadmap for the product. It tells which operations the product needs.'", cat:"场景对话", detail:"用roadmap比喻工艺路线"},
+  {cn:"解释SFC", en:"'SFC is a unique ID for each production unit. Think of it as a passport for the product.'", cat:"场景对话", detail:"用passport比喻SFC"},
+  {cn:"解释烧菲", en:"'Burning means generating RFID bundle tags so we can track each bundle through sewing.'", cat:"场景对话", detail:"解释扎牌的作用"},
+  {cn:"解释外发", en:"'When we subcontract, we pack items, create a delivery note, get e-release pass, and send to supplier.'", cat:"场景对话", detail:"外发流程三步走"},
+  {cn:"解释验针", en:"'NDC checks every garment for broken needles using a metal detector. It's a safety requirement.'", cat:"场景对话", detail:"验针是安全要求"},
+  {cn:"解释效率", en:"'Efficiency = Actual Output SAM ÷ Working Hours. If SAM is 5min/piece and worker makes 12pcs/h, efficiency is 100%.'", cat:"场景对话", detail:"用具体数字举例"},
+  {cn:"问生产进度", en:"'What's the current status of MO20231001? How many pieces completed and how many still in progress?'", cat:"场景对话", detail:"询问制单进度"},
+  {cn:"报告品质问题", en:"'We found critical defects in the sewing process. The AQL inspection failed. We need to start rework.'", cat:"场景对话", detail:"向上级汇报品质问题"},
+  {cn:"设备故障", en:"'Machine #15 has broken down. Fault code E102. We've submitted a repair request.'", cat:"场景对话", detail:"描述设备故障"},
+  {cn:"催供应商返货", en:"'Could you please confirm when the subcontract items will be returned? We need them for the next batch.'", cat:"场景对话", detail:"跟进外发返货"},
+
+  // === 二十四、系统缩写 ===
+  {cn:"制造执行系统", en:"MES", cat:"系统缩写", detail:"Manufacturing Execution System"},
+  {cn:"企业资源计划", en:"SAP ERP", cat:"系统缩写", detail:"企业级资源管理系统"},
+  {cn:"仓库管理系统", en:"WMS", cat:"系统缩写", detail:"Warehouse Management System"},
+  {cn:"高级排程系统", en:"APS", cat:"系统缩写", detail:"Advanced Planning & Scheduling"},
+  {cn:"裁床信息采集系统", en:"CICS", cat:"系统缩写", detail:"Crystal Integrated Cutting System"},
+  {cn:"服装工艺工程系统", en:"ACE", cat:"系统缩写", detail:"工艺路线、唛架、SAM参数管理系统"},
+  {cn:"电子工票系统", en:"ETS", cat:"系统缩写", detail:"E-Ticket System"},
+  {cn:"柔性产线自动化平台", en:"FLAP", cat:"系统缩写", detail:"Flexible Line Automation Platform"},
+  {cn:"车间现场控制", en:"SFC", cat:"系统缩写", detail:"Shop Floor Control"},
+  {cn:"标准允许分钟", en:"SAM", cat:"系统缩写", detail:"Standard Allowed Minutes"},
+  {cn:"机器标准分钟", en:"PTM", cat:"系统缩写", detail:"Piece Time Minutes"},
+  {cn:"标准允许小时", en:"SAH", cat:"系统缩写", detail:"Standard Allowed Hours"},
+  {cn:"设备综合效率", en:"OEE", cat:"系统缩写", detail:"Overall Equipment Effectiveness"},
+  {cn:"可接受品质限", en:"AQL", cat:"系统缩写", detail:"Acceptable Quality Limit"},
+  {cn:"不合格品", en:"NC", cat:"系统缩写", detail:"Non-Conforming"},
+  {cn:"验针中心", en:"NDC", cat:"系统缩写", detail:"Needle Detection Center"},
+  {cn:"自动导引车", en:"AGV", cat:"系统缩写", detail:"Automated Guided Vehicle"},
+  {cn:"圣东尼无缝针织", en:"STI", cat:"系统缩写", detail:"Santoni Seamless Knitting Technology"},
+  {cn:"工厂人力资源系统", en:"FHIS", cat:"系统缩写", detail:"Factory Human Information System"},
+  {cn:"财务报工系统", en:"FVB", cat:"系统缩写", detail:"新版SAP财务报工"},
+  {cn:"旧版ERP", en:"CEN", cat:"系统缩写", detail:"老版SAP报工系统"},
+  {cn:"采购订单", en:"PO", cat:"系统缩写", detail:"Purchase Order"},
+  {cn:"物料清单", en:"BOM", cat:"系统缩写", detail:"Bill of Materials"},
+  {cn:"射频识别", en:"RFID", cat:"系统缩写", detail:"Radio Frequency Identification"},
+  {cn:"生产计划控制", en:"PPC", cat:"系统缩写", detail:"Production Planning & Control"},
+  {cn:"标准分钟值", en:"SMV", cat:"系统缩写", detail:"Standard Minute Value"},
+  {cn:"每小时件数", en:"UPH", cat:"系统缩写", detail:"Units Per Hour"},
+  {cn:"质量控制", en:"QC", cat:"系统缩写", detail:"Quality Control"},
+  {cn:"质量保证", en:"QA", cat:"系统缩写", detail:"Quality Assurance"},
+  {cn:"印绣花部门", en:"VAP", cat:"系统缩写", detail:"Value Added Process (Printing & Embroidery)"},
+];
+// ============== STATE ==============
+let currentMode = 'cn2en';
+let currentCat = '全部';
+let filteredTerms = [...ALL_TERMS];
+let currentIndex = 0;
+let isFlipped = false;
+let learned = JSON.parse(localStorage.getItem('mes_learned_ult') || '{}');
+let spellingAnswer = '';
+
+// ============== CATEGORIES ==============
+function getCategories() {
+  const cats = ['全部', ...new Set(ALL_TERMS.map(t => t.cat))];
+  // Preserve desired category order
+  const order = ['全部','订单与计划','工艺路线','服装面料','辅料','服装部位','拉布裁剪','车缝','洗水','烧菲发卡','品质管理','验针','后整包装','外发管理','设备管理','考勤与效率','产前','STI无缝针织','船务物流','终端与系统','常见动词','角色部门','状态描述','场景对话','系统缩写'];
+  return order.filter(c => cats.includes(c)).concat(cats.filter(c => !order.includes(c)));
+}
+
+// ============== RENDER CAT FILTER ==============
+function renderCatFilter() {
+  const el = document.getElementById('catFilter');
+  const cats = getCategories();
+  el.innerHTML = cats.map(c =>
+    `<button class="cat-btn ${c === currentCat ? 'active' : ''}" onclick="setCat('${c.replace(/'/g,"\\'")}')">${c}</button>`
+  ).join('');
+}
+
+// ============== SET CATEGORY ==============
+function setCat(cat) {
+  currentCat = cat;
+  if (cat === '全部') filteredTerms = [...ALL_TERMS];
+  else filteredTerms = ALL_TERMS.filter(t => t.cat === cat);
+  renderCatFilter();
+  currentIndex = 0;
+  isFlipped = false;
+  renderCurrentCard();
+  updateStats();
+}
+
+// ============== SHUFFLE ==============
+function shuffleCards() {
+  for (let i = filteredTerms.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [filteredTerms[i], filteredTerms[j]] = [filteredTerms[j], filteredTerms[i]];
+  }
+  currentIndex = 0;
+  isFlipped = false;
+  renderCurrentCard();
+}
+
+// ============== SET MODE ==============
+function setMode(mode) {
+  currentMode = mode;
+  isFlipped = false;
+  document.querySelectorAll('.mode-btn').forEach(b => {
+    const labels = {cn2en:'看中文',en2cn:'看英文',spell:'拼写',description:'看描述',learn:'循环学习',table:'词汇表'};
+    b.classList.toggle('active', b.textContent.includes(labels[mode]));
+  });
+  document.getElementById('searchBox').style.display = mode === 'table' ? 'block' : 'none';
+  const nav = document.getElementById('actionButtons');
+  const act = document.getElementById('actionButtons2');
+  nav.style.display = (mode === 'table') ? 'none' : 'flex';
+  act.style.display = (mode === 'table') ? 'none' : 'flex';
+  currentIndex = 0;
+  renderCurrentCard();
+}
+
+// ============== STATS ==============
+function updateStats() {
+  const total = filteredTerms.length;
+  const totalAll = ALL_TERMS.length;
+  const learnedCount = filteredTerms.filter(t => learned[t.cn]).length;
+  const learnedAll = ALL_TERMS.filter(t => learned[t.cn]).length;
+  const pct = totalAll > 0 ? Math.round(learnedAll / totalAll * 100) : 0;
+  document.getElementById('totalCount').textContent = totalAll;
+  document.getElementById('learnedCount').textContent = learnedAll;
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('totalBadge').textContent = totalAll + ' 词';
+}
+
+// ============== RENDER CARD ==============
+function renderCurrentCard() {
+  if (filteredTerms.length === 0) {
+    document.getElementById('contentArea').innerHTML = '<div style="text-align:center;padding:60px 20px;color:var(--text2)"><div style="font-size:48px;margin-bottom:16px;">🎉</div><h3>没有词汇</h3><p>当前分类没有词汇，试试其他分类吧！</p></div>';
+    return;
+  }
+  if (currentIndex >= filteredTerms.length) currentIndex = 0;
+  if (currentIndex < 0) currentIndex = 0;
+
+  if (currentMode === 'table') { renderTable(); return; }
+
+  const term = filteredTerms[currentIndex];
+  const isLearned = learned[term.cn];
+
+  // === FRONT FACE ===
+  let frontHtml = '<div class="card-face card-front">';
+  frontHtml += '<div class="card-category"><span>📂 ' + term.cat + '</span><span>' + (currentIndex + 1) + '/' + filteredTerms.length + '</span></div>';
+
+  if (currentMode === 'cn2en') {
+    frontHtml += '<div class="card-question">' + term.cn + '</div>';
+    frontHtml += '<div class="card-hint">👆 点击翻转 · 看中文说英文</div>';
+    frontHtml += '<div class="card-body"><div style="font-size:40px;">🤔</div></div>';
+  } else if (currentMode === 'en2cn') {
+    frontHtml += '<div class="card-question" style="font-size:22px;">' + term.en + '</div>';
+    frontHtml += '<div class="card-hint">👆 点击翻转 · 看英文说中文</div>';
+    frontHtml += '<div class="card-body"><div style="font-size:40px;">🤔</div></div>';
+  } else if (currentMode === 'description') {
+    frontHtml += '<div class="card-hint">👆 点击翻转 · 看描述说出术语</div>';
+    frontHtml += '<div class="card-question" style="font-size:18px;font-weight:500;">' + term.detail + '</div>';
+    frontHtml += '<div class="card-body"><div style="font-size:40px;">🤔</div></div>';
+  } else if (currentMode === 'spell') {
+    frontHtml += '<div class="card-question">' + term.cn + '</div>';
+    frontHtml += '<div class="card-hint">输入英文拼写，按回车核对</div>';
+    frontHtml += '<div class="card-body"><input class="spelling-input" id="spellInput" placeholder="输入英文..." autocomplete="off" onkeydown="if(event.key==\'Enter\')checkSpell()" onclick="event.stopPropagation()"><div class="feedback" id="spellFeedback"></div></div>';
+  } else if (currentMode === 'learn') {
+    // Learning mode: show full content without flip
+    frontHtml += '<div class="card-question" style="font-size:22px;">' + term.en + '</div>';
+    frontHtml += '<div class="card-answer" style="font-size:20px;margin-top:0;">' + term.cn + '</div>';
+    frontHtml += '<div class="card-detail">' + term.detail + '</div>';
+    frontHtml += '<div class="card-hint" style="margin-top:10px;">👆 点击可翻转对照</div>';
+  }
+
+  if (isLearned) frontHtml += '<div class="card-sam">✅ 已掌握</div>';
+  frontHtml += '</div>';
+
+  // === BACK FACE ===
+  let backHtml = '<div class="card-face card-back">';
+  backHtml += '<div class="card-category"><span>📂 ' + term.cat + '</span><span>' + (currentIndex + 1) + '/' + filteredTerms.length + '</span></div>';
+
+  if (currentMode === 'cn2en') {
+    backHtml += '<div class="card-answer" style="font-size:22px;">' + term.en + '</div>';
+    backHtml += '<div class="card-detail">' + term.detail + '</div>';
+  } else if (currentMode === 'en2cn') {
+    backHtml += '<div class="card-answer">' + term.cn + '</div>';
+    backHtml += '<div class="card-detail">' + term.detail + '</div>';
+  } else if (currentMode === 'description') {
+    backHtml += '<div class="card-answer" style="font-size:20px;">' + term.en + '</div>';
+    backHtml += '<div class="card-detail">中文：' + term.cn + '</div>';
+    backHtml += '<div class="card-example">💡 ' + term.detail + '</div>';
+  } else if (currentMode === 'spell') {
+    backHtml += '<div class="reveal-word">' + term.en.split(' (')[0] + '</div>';
+    backHtml += '<div class="card-answer" style="font-size:18px;margin-top:6px;">中文：' + term.cn + '</div>';
+    backHtml += '<div class="card-detail">' + term.detail + '</div>';
+  } else if (currentMode === 'learn') {
+    backHtml += '<div class="card-question" style="font-size:22px;">' + term.cn + '</div>';
+    backHtml += '<div class="card-answer" style="font-size:20px;margin-top:0;">' + term.en + '</div>';
+    backHtml += '<div class="card-detail">' + term.detail + '</div>';
+  }
+
+  backHtml += '<div class="card-sam">👆 点击翻回 · ' + (isLearned ? '✅ 已掌握' : '⬜ 学习中') + '</div>';
+  backHtml += '</div>';
+
+  let html = '<div class="flashcard-wrap"><div class="flashcard' + (isFlipped ? ' flipped' : '') + '" onclick="toggleFlip()">'
+    + frontHtml + backHtml + '</div></div>';
+
+  document.getElementById('contentArea').innerHTML = html;
+
+  if (currentMode === 'spell' && !isFlipped) {
+    const inp = document.getElementById('spellInput');
+    if (inp) { inp.focus(); spellingAnswer = term.en.split(' (')[0].toLowerCase(); }
+  }
+
+  updateStats();
+}
+
+// ============== FLIP ==============
+function toggleFlip() {
+  if (currentMode === 'spell' && !isFlipped) {
+    if (document.getElementById('spellInput') && document.activeElement === document.getElementById('spellInput')) return;
+  }
+  if (currentMode === 'table') return;
+  if (currentMode === 'learn') {
+    // In learn mode flipping shows reverse side
+    isFlipped = !isFlipped;
+    renderCurrentCard();
+    return;
+  }
+  isFlipped = !isFlipped;
+  renderCurrentCard();
+}
+
+// ============== SPELLING CHECK ==============
+function checkSpell() {
+  const inp = document.getElementById('spellInput');
+  const fb = document.getElementById('spellFeedback');
+  if (!inp || !fb) return;
+  const answer = inp.value.trim().toLowerCase();
+  if (!answer) return;
+
+  if (answer === spellingAnswer ||
+      answer.replace(/[^a-z0-9]/g,'') === spellingAnswer.replace(/[^a-z0-9]/g,'')) {
+    inp.className = 'spelling-input correct';
+    fb.className = 'feedback correct';
+    fb.textContent = '✅ 拼写正确！';
+    setTimeout(() => { markLearned(true); }, 800);
+  } else {
+    inp.className = 'spelling-input wrong';
+    fb.className = 'feedback wrong';
+    fb.textContent = '❌ 不对，再想想！（点击卡片可看答案）';
+  }
+}
+
+// ============== MARK LEARNED ==============
+function markLearned(yes) {
+  if (filteredTerms.length === 0) return;
+  const term = filteredTerms[currentIndex];
+  if (yes) learned[term.cn] = true;
+  else delete learned[term.cn];
+  localStorage.setItem('mes_learned_ult', JSON.stringify(learned));
+  isFlipped = false;
+  nextCard();
+}
+
+// ============== NAVIGATION ==============
+function nextCard() {
+  if (currentIndex < filteredTerms.length - 1) currentIndex++;
+  else currentIndex = 0;
+  isFlipped = false;
+  renderCurrentCard();
+}
+function prevCard() {
+  if (currentIndex > 0) currentIndex--;
+  else currentIndex = filteredTerms.length - 1;
+  isFlipped = false;
+  renderCurrentCard();
+}
+
+// ============== TABLE MODE ==============
+function renderTable() {
+  if (currentMode !== 'table') return;
+  const q = document.getElementById('searchBox').value.toLowerCase();
+  let terms = filteredTerms;
+  if (q) terms = terms.filter(t => t.cn.includes(q) || t.en.toLowerCase().includes(q) || t.cat.includes(q));
+
+  let html = '<div class="table-wrap"><table>';
+  html += '<tr><th>中文</th><th>English</th><th>分类</th><th>状态</th></tr>';
+  terms.forEach(t => {
+    const l = learned[t.cn] ? '✅' : '⬜';
+    html += `<tr><td><strong>${t.cn}</strong></td><td>${t.en}</td><td><span class="table-cat">${t.cat}</span></td><td style="text-align:center">${l}</td></tr>`;
+  });
+  html += '</table></div>';
+  if (terms.length === 0) html = '<div style="text-align:center;padding:40px;color:var(--text2)">没有匹配的词汇</div>';
+  document.getElementById('contentArea').innerHTML = html;
+}
+
+// ============== TOGGLE DARK ==============
+function toggleDark() {
+  document.body.classList.toggle('dark');
+  localStorage.setItem('mes_dark_ult', document.body.classList.contains('dark') ? '1' : '0');
+}
+
+// ============== TOUCH SWIPE ==============
+let touchStartX = 0;
+let touchStartY = 0;
+let touchEndX = 0;
+let touchEndY = 0;
+let isSwiping = false;
+
+document.addEventListener('touchstart', (e) => {
+  if (currentMode === 'table') return;
+  const t = e.touches[0];
+  touchStartX = t.clientX;
+  touchStartY = t.clientY;
+  isSwiping = false;
+}, { passive: true });
+
+document.addEventListener('touchmove', (e) => {
+  if (currentMode === 'table') return;
+  const t = e.touches[0];
+  const dx = Math.abs(t.clientX - touchStartX);
+  const dy = Math.abs(t.clientY - touchStartY);
+  if (dx > 10 || dy > 10) isSwiping = true;
+  // Add visual feedback - slight card shift
+  const card = document.querySelector('.flashcard');
+  if (card && !isFlipped && currentMode !== 'spell') {
+    const offset = t.clientX - touchStartX;
+    if (Math.abs(offset) < 100) {
+      card.style.transform = `rotateY(${isFlipped ? 180 : 0}deg) translateX(${offset * 0.2}px)`;
+    }
+  }
+}, { passive: true });
+
+document.addEventListener('touchend', (e) => {
+  if (currentMode === 'table') { isSwiping = false; return; }
+  if (!isSwiping) return; // Was a tap, not a swipe
+  const t = e.changedTouches[0];
+  touchEndX = t.clientX;
+  touchEndY = t.clientY;
+  const dx = touchEndX - touchStartX;
+  const dy = Math.abs(touchEndY - touchStartY);
+
+  // Reset card transform
+  const card = document.querySelector('.flashcard');
+  if (card) {
+    card.style.transform = '';
+    card.style.transition = 'none';
+    setTimeout(() => { if (card) card.style.transition = ''; }, 50);
+  }
+
+  // Only horizontal swipes (not vertical scrolling)
+  if (Math.abs(dx) > 60 && dy < Math.abs(dx)) {
+    if (dx > 0) prevCard();
+    else nextCard();
+  }
+  isSwiping = false;
+}, { passive: true });
+
+// ============== SEARCH ALL TERMS ==============
+let searchTimeout = null;
+
+function openSearch() {
+  document.getElementById('searchOverlay').classList.add('show');
+  document.getElementById('searchPanel').classList.add('show');
+  document.getElementById('searchInput').value = '';
+  document.getElementById('searchList').innerHTML = '';
+  document.getElementById('searchCount').textContent = '';
+  setTimeout(() => document.getElementById('searchInput').focus(), 200);
+}
+
+function closeSearch() {
+  document.getElementById('searchOverlay').classList.remove('show');
+  document.getElementById('searchPanel').classList.remove('show');
+}
+
+function searchAll() {
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  const list = document.getElementById('searchList');
+  const count = document.getElementById('searchCount');
+
+  if (!q) {
+    list.innerHTML = '<div class="sr-empty">🔍 输入中文/英文/分类名称开始搜索全部616个词汇</div>';
+    count.textContent = '';
+    return;
+  }
+
+  // Search ALL terms, not just filtered
+  const results = ALL_TERMS.filter(t =>
+    t.cn.toLowerCase().includes(q) ||
+    t.en.toLowerCase().includes(q) ||
+    t.cat.toLowerCase().includes(q) ||
+    (t.detail && t.detail.toLowerCase().includes(q))
+  );
+
+  count.textContent = results.length > 0
+    ? `找到 ${results.length} 个匹配结果`
+    : '没有匹配的词汇';
+
+  if (results.length === 0) {
+    list.innerHTML = '<div class="sr-empty">😕 没有找到，试试其他关键词</div>';
+    return;
+  }
+
+  list.innerHTML = results.map(t =>
+    `<div class="sr-item" onclick="goToTerm('${t.cn.replace(/'/g,"\\'")}')">
+      <div class="sr-en">${highlight(t.en, q)}</div>
+      <div class="sr-cn">${highlight(t.cn, q)}</div>
+      <span class="sr-cat">${t.cat}</span>
+      <div class="sr-detail">${highlight(t.detail, q)}</div>
+    </div>`
+  ).join('');
+}
+
+function highlight(text, query) {
+  if (!query) return text;
+  const idx = text.toLowerCase().indexOf(query);
+  if (idx === -1) return text;
+  return text.slice(0, idx) + '<mark style="background:#ffd700;color:#1a1a2e;border-radius:2px;padding:0 2px;">' +
+    text.slice(idx, idx + query.length) + '</mark>' +
+    text.slice(idx + query.length);
+}
+
+function goToTerm(cn) {
+  const idx = ALL_TERMS.findIndex(t => t.cn === cn);
+  if (idx === -1) return;
+  // Set filtered to all, go to that term
+  currentCat = '全部';
+  filteredTerms = [...ALL_TERMS];
+  renderCatFilter();
+  currentIndex = idx;
+  isFlipped = false;
+  renderCurrentCard();
+  closeSearch();
+  updateStats();
+}
+
+// ============== KEYBOARD SHORTCUTS ==============
+document.addEventListener('keydown', (e) => {
+  if (currentMode === 'table') return;
+  if (e.key === ' ' || e.key === 'Enter') {
+    if (currentMode === 'spell' && !isFlipped) return;
+    e.preventDefault();
+    if (!isFlipped) toggleFlip();
+    else nextCard();
+  }
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); nextCard(); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prevCard(); }
+  if (e.key === '1') markLearned(true);
+  if (e.key === '2') markLearned(false);
+});
+
+// ============== INIT ==============
+function init() {
+  if (localStorage.getItem('mes_dark_ult') === '1') document.body.classList.add('dark');
+  renderCatFilter();
+  filteredTerms = [...ALL_TERMS];
+  updateStats();
+  renderCurrentCard();
+
+  // Register service worker for offline PWA use
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+}
+
+init();
+</script>
+
+<!-- Search Modal -->
+<div class="search-overlay" id="searchOverlay" onclick="closeSearch()"></div>
+<div class="search-results" id="searchPanel">
+  <div class="sr-header">
+    <input id="searchInput" placeholder="🔍 搜索中文 / English / 分类…" autocomplete="off" oninput="searchAll()" onkeydown="if(event.key==='Enter')searchAll()">
+    <button class="close-btn" onclick="closeSearch()">✕</button>
+  </div>
+  <div class="sr-count" id="searchCount"></div>
+  <div class="sr-list" id="searchList"></div>
+</div>
+
+</body>
+</html>
