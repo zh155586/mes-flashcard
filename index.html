@@ -898,6 +898,7 @@ const ALL_TERMS = [
 
 // ============== USER MANAGEMENT ==============
 const USERS_LIST_KEY = 'mes_team_users';
+const LAST_USER_KEY = 'mes_last_user';
 let currentUser = '';
 
 function getUsers() {
@@ -921,6 +922,7 @@ function loadUserData(username) {
 
 function switchUser(username) {
   saveUserData();
+  localStorage.setItem(LAST_USER_KEY, username);
   loadUserData(username);
 }
 
@@ -998,9 +1000,11 @@ let autoPlay = localStorage.getItem('mes_autoplay') !== '0';
 // ============== INIT ==============
 function init() {
   const today = new Date().toDateString();
-  // Init first user
+  // Init last used user
   const users = getUsers();
-  loadUserData(users[0]);
+  const lastUser = localStorage.getItem(LAST_USER_KEY);
+  const startUser = lastUser && users.includes(lastUser) ? lastUser : users[0];
+  loadUserData(startUser);
   if (studyStats.date !== today) {
     if (studyStats.date) {
       const yesterday = new Date(Date.now() - 86400000).toDateString();
