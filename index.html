@@ -1038,16 +1038,18 @@ function getWrongIndices() {
 }
 
 // ============== AUDIO (Browser TTS) ==============
+let audioPlaying = false;
 function playAudio(idx) {
-  if (idx < 0 || idx >= ALL_TERMS.length) return;
+  if (idx < 0 || idx >= ALL_TERMS.length || audioPlaying) return;
   const term = ALL_TERMS[idx];
   const btn = document.querySelector('.audio-btn');
   if (btn) { btn.classList.add('playing'); setTimeout(() => btn.classList.remove('playing'), 1500); }
   if (!('speechSynthesis' in window)) return;
 
   speechSynthesis.cancel();
+  audioPlaying = true;
+  setTimeout(() => { audioPlaying = false; }, 2000);
 
-  // 正面：按模式念；反面：念另一种语言
   const modeShowsChinese = (currentMode === 'learn' || currentMode === 'cn2en' || currentMode === 'wrong');
   const speakChinese = !isFlipped ? modeShowsChinese : !modeShowsChinese;
 
@@ -1059,6 +1061,7 @@ function playAudio(idx) {
   const utter = new SpeechSynthesisUtterance(text);
   utter.lang = lang;
   utter.rate = 0.9;
+  utter.onend = () => { audioPlaying = false; };
   speechSynthesis.speak(utter);
 }
 
