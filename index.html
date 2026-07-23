@@ -1037,7 +1037,7 @@ function getWrongIndices() {
   return wrongs;
 }
 
-// ============== AUDIO (Browser TTS - English + Chinese) ==============
+// ============== AUDIO (Browser TTS) ==============
 function playAudio(idx) {
   if (idx < 0 || idx >= ALL_TERMS.length) return;
   const term = ALL_TERMS[idx];
@@ -1045,31 +1045,32 @@ function playAudio(idx) {
   if (btn) { btn.classList.add('playing'); setTimeout(() => btn.classList.remove('playing'), 1500); }
   if (!('speechSynthesis' in window)) return;
 
-  const enText = term.en.replace(/\s*\([^)]*\)/g, '').replace(/\s*\/[^/]*\//g, '').trim();
-  const cnText = term.cn;
-
   speechSynthesis.cancel();
 
-  const enUtter = new SpeechSynthesisUtterance(enText);
-  enUtter.lang = 'en-US';
-  enUtter.rate = 0.85;
+  // 卡片正面显示中文 → 念中文；正面显示英文 → 念英文
+  const isChineseFront = (currentMode === 'learn' || currentMode === 'cn2en' || currentMode === 'wrong');
+  const text = isChineseFront
+    ? term.cn
+    : term.en.replace(/\s*\([^)]*\)/g, '').replace(/\s*\/[^/]*\//g, '').trim();
+  const lang = isChineseFront ? 'zh-CN' : 'en-US';
 
-  const cnUtter = new SpeechSynthesisUtterance(cnText);
-  cnUtter.lang = 'zh-CN';
-  cnUtter.rate = 0.9;
-
-  enUtter.onend = () => {
-    setTimeout(() => speechSynthesis.speak(cnUtter), 200);
-  };
-
-  speechSynthesis.speak(enUtter);
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = lang;
+  utter.rate = 0.9;
+  speechSynthesis.speak(utter);
 }
 
 function toggleAutoPlay() {
   autoPlay = !autoPlay;
   localStorage.setItem('mes_autoplay', autoPlay ? '1' : '0');
   document.getElementById('autoPlayToggle').classList.toggle('on', autoPlay);
-}" onclick="setCat('${c.replace(/'/g,"\\'")}')">${c}</button>`
+}
+
+// ============== CATEGORIES (MEGA) ==============
+function renderCatFilter() {
+  const el = document.getElementById('catFilter');
+  el.innerHTML = getMegaCats().map(c =>
+    `<button class="cat-btn ${c===currentCat?'active':''}" onclick="setCat('${c.replace(/'/g,"\\'")}')">${c}</button>`
   ).join('');
 }
 
