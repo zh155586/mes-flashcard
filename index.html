@@ -1047,12 +1047,14 @@ function playAudio(idx) {
 
   speechSynthesis.cancel();
 
-  // 卡片正面显示中文 → 念中文；正面显示英文 → 念英文
-  const isChineseFront = (currentMode === 'learn' || currentMode === 'cn2en' || currentMode === 'wrong');
-  const text = isChineseFront
+  // 正面：按模式念；反面：念另一种语言
+  const modeShowsChinese = (currentMode === 'learn' || currentMode === 'cn2en' || currentMode === 'wrong');
+  const speakChinese = !isFlipped ? modeShowsChinese : !modeShowsChinese;
+
+  const text = speakChinese
     ? term.cn
     : term.en.replace(/\s*\([^)]*\)/g, '').replace(/\s*\/[^/]*\//g, '').trim();
-  const lang = isChineseFront ? 'zh-CN' : 'en-US';
+  const lang = speakChinese ? 'zh-CN' : 'en-US';
 
   const utter = new SpeechSynthesisUtterance(text);
   utter.lang = lang;
