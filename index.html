@@ -996,7 +996,7 @@ let currentCat = '全部';
 let filteredTerms = [];
 let currentIndex = 0;
 let isFlipped = false;
-let autoPlay = localStorage.getItem('mes_autoplay') !== '0';
+let autoPlay = false; // 默认不自动发音，点🔊按钮才发音
 
 // ============== INIT ==============
 function init() {
