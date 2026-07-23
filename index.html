@@ -150,7 +150,7 @@
   <div style="text-align:center;font-size:11px;color:var(--text2);margin-top:4px;" id="progressText">0% 已掌握</div>
 
   <div class="mode-bar" style="margin-top:14px;">
-    <button class="mode-btn active" onclick="setMode('review')">📚 复习</button>
+    <button class="mode-btn" onclick="setMode('learn')">📖 学新</button>
     <button class="mode-btn" onclick="setMode('cn2en')">🇨🇳 看中文</button>
     <button class="mode-btn" onclick="setMode('en2cn')">🇬🇧 看英文</button>
     <button class="mode-btn" onclick="setMode('spell')">⌨️ 拼写</button>
@@ -988,7 +988,7 @@ function isTermInMegaCat(term, megaCat) {
 let srsData = {};
 let studyStats = {};
 
-let currentMode = 'review';
+let currentMode = 'learn';
 let currentCat = '全部';
 let filteredTerms = [];
 let currentIndex = 0;
@@ -1155,7 +1155,7 @@ function setCat(cat) {
 function setMode(mode) {
   currentMode = mode;
   isFlipped = false;
-  const modes = ['review','cn2en','en2cn','spell','quiz','wrong','table'];
+  const modes = ['learn','cn2en','en2cn','spell','quiz','wrong','table'];
   document.querySelectorAll('.mode-btn').forEach((b, i) => {
     b.classList.toggle('active', modes[i] === mode);
   });
@@ -1216,7 +1216,7 @@ function renderCurrentCard() {
   backHtml += '<div class="card-category"><span>📂 ' + term.cat + '</span><span>' + (currentIndex+1) + '/' + filteredTerms.length + '</span></div>';
 
   const showWrongHint = currentMode === 'wrong' ? ' · 这是你的错题' : '';
-  if (currentMode === 'review' || currentMode === 'cn2en' || currentMode === 'wrong') {
+  if (currentMode === 'learn' || currentMode === 'cn2en' || currentMode === 'wrong') {
     frontHtml += '<div class="card-question">' + term.cn + '</div>';
     frontHtml += '<div class="card-hint">👆 点击翻转 · 看中文说英文' + showWrongHint + '</div>';
     backHtml += '<div class="card-answer">' + term.en + '</div>';
@@ -1238,12 +1238,11 @@ function renderCurrentCard() {
 
   let html = '<div class="flashcard-wrap"><div class="flashcard' + (isFlipped?' flipped':'') + '" onclick="toggleFlip()">' + frontHtml + backHtml + '</div></div>';
 
-  if ((currentMode === 'review' || currentMode === 'wrong') && isFlipped) {
+  if ((currentMode === 'learn' || currentMode === 'wrong') && isFlipped) {
     html += '<div class="difficulty-bar">';
     html += '<button class="diff-btn diff-again" onclick="rateAndNext(' + idx + ',0)">🔴 忘了</button>';
-    html += '<button class="diff-btn diff-hard" onclick="rateAndNext(' + idx + ',1)">🟡 困难</button>';
-    html += '<button class="diff-btn diff-good" onclick="rateAndNext(' + idx + ',2)">🟢 良好</button>';
-    html += '<button class="diff-btn diff-easy" onclick="rateAndNext(' + idx + ',3)">⭐ 简单</button>';
+    html += '<button class="diff-btn diff-hard" onclick="rateAndNext(' + idx + ',1)">🟡 模糊</button>';
+    html += '<button class="diff-btn diff-good" onclick="rateAndNext(' + idx + ',2)">🟢 记得</button>';
     html += '</div>';
   }
 
@@ -1270,10 +1269,7 @@ function toggleFlip() {
 // ============== RATE AND NEXT ==============
 function rateAndNext(idx, rating) {
   rateCard(idx, rating);
-  if (currentMode === 'review') {
-    const due = getDueIndices();
-    if (due.length > 0) filteredTerms = due.map(i => ({...ALL_TERMS[i], _idx: i}));
-  } else if (currentMode === 'wrong') {
+  if (currentMode === 'wrong') {
     filteredTerms = getWrongIndices().map(i => ({...ALL_TERMS[i], _idx: i}));
   }
   isFlipped = false;
@@ -1290,7 +1286,7 @@ function checkSpell() {
   if (answer === correct || answer.replace(/[^a-z0-9]/g,'') === correct.replace(/[^a-z0-9]/g,'')) {
     inp.className = 'spelling-input correct'; fb.className = 'feedback correct'; fb.textContent = '✅ 正确！';
     playAudio(term._idx);
-    setTimeout(() => { if (currentMode === 'review' || currentMode === 'wrong') rateAndNext(term._idx, 2); else nextCard(); }, 1000);
+    setTimeout(() => { if (currentMode === 'learn' || currentMode === 'wrong') rateAndNext(term._idx, 2); else nextCard(); }, 1000);
   } else {
     inp.className = 'spelling-input wrong'; fb.className = 'feedback wrong'; fb.textContent = '❌ 再想想！（点击卡片看答案）';
   }
