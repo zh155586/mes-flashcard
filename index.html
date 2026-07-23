@@ -1118,7 +1118,12 @@ function toggleAutoPlay() {
   autoPlay = !autoPlay;
   localStorage.setItem("mes_autoplay", autoPlay ? "1" : "0");
   document.getElementById("autoPlayToggle").classList.toggle("on", autoPlay);
-}" onclick="setCat('${c.replace(/'/g,"\\'")}')">${c}</button>`
+}
+
+function renderCatFilter() {
+  const el = document.getElementById('catFilter');
+  el.innerHTML = getMegaCats().map(c =>
+    `<button class="cat-btn ${c===currentCat?'active':''}" onclick="setCat('${c.replace(/'/g,"\\'")}')">${c}</button>`
   ).join('');
 }
 
