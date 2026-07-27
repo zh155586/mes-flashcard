@@ -3,11 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-touch-fullscreen" content="yes">
-<title>MES 英语闪卡 Pro</title>
+<title>MES 英语闪卡 · 团队版</title>
 <style>
   :root {
     --bg: #f0f2f5; --card-bg: #fff; --text: #1a1a2e; --text2: #555;
@@ -117,12 +120,23 @@
   .toggle-switch.on { background:var(--success); }
   .toggle-switch::after { content:''; position:absolute; width:16px; height:16px; background:#fff; border-radius:50%; top:2px; left:2px; transition:left .2s; }
   .toggle-switch.on::after { left:18px; }
+  .user-selector { display:flex; align-items:center; gap:4px; }
+  .user-selector select { padding:4px 8px; border-radius:8px; border:1px solid var(--border); background:var(--card-bg); color:var(--text); font-size:12px; font-weight:600; outline:none; cursor:pointer; max-width:90px; }
+  .empty-state { text-align:center; padding:60px 20px; color:var(--text2); }
+  .empty-state .icon { font-size:48px; margin-bottom:16px; }
+  .empty-state h3 { font-size:18px; margin-bottom:8px; color:var(--text); }
+  .empty-state p { font-size:14px; line-height:1.6; }
+  .wrong-badge { display:inline-block; padding:1px 6px; border-radius:6px; font-size:10px; font-weight:700; background:var(--danger); color:#fff; margin-left:4px; }
 </style>
 </head>
 <body>
 <div class="header">
-  <h1>MES 英语闪卡 Pro</h1>
+  <h1>MES 英语闪卡 · 团队版</h1>
   <div class="header-actions">
+    <div class="user-selector">
+      <select id="userSelect" onchange="switchUser(this.value)" style="padding:5px 10px;border-radius:8px;border:1px solid var(--border);background:var(--card-bg);color:var(--text);font-size:12px;font-weight:600;outline:none;cursor:pointer;"></select>
+      <button class="btn btn-sm" onclick="addUserPrompt()" title="添加新用户">➕</button>
+    </div>
     <label class="auto-play-toggle"><div class="toggle-switch on" id="autoPlayToggle" onclick="toggleAutoPlay()"></div>自动发音</label>
     <button class="btn btn-sm" onclick="toggleDark()">🌙</button>
   </div>
@@ -133,16 +147,18 @@
     <div class="stat-card"><div class="stat-num" id="statToday">0</div><div class="stat-label">今日已学</div></div>
     <div class="stat-card streak"><div class="stat-num" id="statStreak">0</div><div class="stat-label">连续天数</div></div>
     <div class="stat-card learned"><div class="stat-num" id="statLearned">0</div><div class="stat-label">已掌握</div></div>
+    <div class="stat-card" style="border:2px solid var(--danger);"><div class="stat-num" id="statWrong" style="color:var(--danger);">0</div><div class="stat-label">❌ 待复习错题</div></div>
   </div>
   <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
   <div style="text-align:center;font-size:11px;color:var(--text2);margin-top:4px;" id="progressText">0% 已掌握</div>
 
   <div class="mode-bar" style="margin-top:14px;">
-    <button class="mode-btn active" onclick="setMode('review')">📚 复习</button>
+    <button class="mode-btn" onclick="setMode('learn')">📖 学新</button>
     <button class="mode-btn" onclick="setMode('cn2en')">🇨🇳 看中文</button>
     <button class="mode-btn" onclick="setMode('en2cn')">🇬🇧 看英文</button>
     <button class="mode-btn" onclick="setMode('spell')">⌨️ 拼写</button>
     <button class="mode-btn" onclick="setMode('quiz')">🎯 测验</button>
+    <button class="mode-btn" onclick="setMode('wrong')" style="border-color:var(--danger);color:var(--danger);">📕 错题</button>
     <button class="mode-btn" onclick="setMode('table')">📋 词汇表</button>
   </div>
 
@@ -156,6 +172,8 @@
     <button class="nav-btn" onclick="shuffleCards()" title="打乱">🔀</button>
   </div>
 </div>
+
+
 <div id="audioLoader" style="position:fixed;bottom:10px;left:10px;right:10px;background:var(--card-bg);padding:10px 16px;border-radius:12px;box-shadow:var(--shadow);z-index:999;display:none;font-size:13px;color:var(--text2);text-align:center;"><span id="audioLoaderText">🔊 正在加载语音包...</span></div>
 <audio id="audioPlayer" preload="none"></audio>
 <script>
@@ -215,7 +233,11 @@ async function loadAudioPack() {
 }
 
 // Start loading audio pack immediately
+
+// Start loading audio pack immediately
 loadAudioPack();
+
+
 
 const ALL_TERMS = [
   // === 一、订单与计划 ===
@@ -281,7 +303,7 @@ const ALL_TERMS = [
   {cn:"涤纶", en:"Polyester", cat:"服装面料", detail:"合成纤维，抗皱耐磨"},
   {cn:"尼龙", en:"Nylon", cat:"服装面料", detail:"合成纤维，韧性好"},
   {cn:"氨纶/弹力纤维", en:"Spandex / Elastane", cat:"服装面料", detail:"高弹性合成纤维，通常与其他纤维混纺"},
-  {cn:"粘胶", en:"Viscose", cat:"服装面料", detail:"以木浆为原料的再生纤维素纤维，手感柔软，美国市场也称Rayon"},
+  {cn:"粘胶", en:"Viscose", cat:"服装面料", detail:"以木浆为原料的再生纤维素纤维，手感柔软。美国市场也称Rayon"},
   {cn:"羊毛", en:"Wool", cat:"服装面料", detail:"天然动物毛纤维"},
   {cn:"真丝", en:"Silk", cat:"服装面料", detail:"天然蛋白纤维，光滑柔软"},
   {cn:"亚麻", en:"Linen", cat:"服装面料", detail:"天然植物韧皮纤维，透气凉爽"},
@@ -307,7 +329,7 @@ const ALL_TERMS = [
   {cn:"布重", en:"Fabric Weight (GSM)", cat:"服装面料", detail:"面料克重，克/平方米"},
   {cn:"缩水率", en:"Shrinkage Rate", cat:"服装面料", detail:"面料水洗后的收缩百分比"},
   {cn:"色牢度", en:"Color Fastness", cat:"服装面料", detail:"面料颜色的耐水洗/耐摩擦牢度"},
-  {cn:"对色", en:"Color Matching", cat:"服装面料", detail:"对比标准色卡确认颜色是否在允许的Shade Band范围内"},
+  {cn:"对色", en:"Color Matching", cat:"服装面料", detail:"将面料颜色与标准色卡进行比对"},
   {cn:"成分", en:"Fabric Composition", cat:"服装面料", detail:"面料的纤维成分及含量百分比"},
   {cn:"布卷", en:"Fabric Roll / Bolt", cat:"服装面料", detail:"成卷包装的面料"},
 
@@ -502,7 +524,7 @@ const ALL_TERMS = [
   {cn:"失效菲卡", en:"Deactivate Card", cat:"烧菲发卡", detail:"将扎牌标记为失效状态(IS_ACTIVE=N)"},
   {cn:"单独烧菲", en:"Separate Burning (KIND=1)", cat:"烧菲发卡", detail:"特殊幅位的独立烧菲"},
   {cn:"额外工序烧菲", en:"Extra Step Burning (KIND=7)", cat:"烧菲发卡", detail:"正常工序之外增加额外烧菲，需审批"},
-  {cn:"尾部发卡", en:"Tail-End Card Issuing (KIND=4)", cat:"烧菲发卡", detail:"洗水后二次烧菲或Santoni产品后整烧菲，成衣阶段扎牌重新分组(KIND=4)"},
+  {cn:"尾部发卡", en:"Tail-End Card Issuing (KIND=4)", cat:"烧菲发卡", detail:"洗水后二次烧菲或Santoni产品后整烧菲(KIND=4)"},
   {cn:"返工烧菲", en:"Rework Burning (KIND=5)", cat:"烧菲发卡", detail:"不合格品返工后的重新烧菲"},
   {cn:"发卡机", en:"Card Issuing Machine", cat:"烧菲发卡", detail:"用于分配RFID卡号的硬件设备"},
 
@@ -687,7 +709,7 @@ const ALL_TERMS = [
   {cn:"产前样", en:"PP Sample (Pre-Production Sample)", cat:"产前", detail:"大货前制作的产前样品"},
   {cn:"尺码样", en:"Size Set Sample", cat:"产前", detail:"所有尺码的样品一套"},
   {cn:"销售样", en:"Salesman Sample (SM)", cat:"产前", detail:"给客户展示的销售样品"},
-  {cn:"船头样", en:"Shipment Sample", cat:"产前", detail:"出货前从已完成大货中抽取寄给客户的确认样，代表最终出货品质"},
+  {cn:"船头样", en:"Shipment Sample", cat:"产前", detail:"出货前从已完成大货中抽取寄给客户的确认样"},
   {cn:"照相样", en:"Photo Shoot Sample", cat:"产前", detail:"用于拍摄目录的样品"},
   {cn:"批办/确认样", en:"Approval Sample", cat:"产前", detail:"经客户批准的最终样品"},
   {cn:"工艺单", en:"Tech Pack / Specification Sheet", cat:"产前", detail:"产品工艺要求的详细文件"},
@@ -868,7 +890,7 @@ const ALL_TERMS = [
   {cn:"不合格品", en:"NC", cat:"系统缩写", detail:"Non-Conforming"},
   {cn:"验针中心", en:"NDC", cat:"系统缩写", detail:"Needle Detection Center"},
   {cn:"自动导引车", en:"AGV", cat:"系统缩写", detail:"Automated Guided Vehicle"},
-  {cn:"圣东尼无缝针织", en:"STI", cat:"系统缩写", detail:"Santoni -- 意大利圣东尼无缝针织机品牌，MES中对应无缝针织生产模块"},
+  {cn:"圣东尼无缝针织", en:"STI", cat:"系统缩写", detail:"Santoni 意大利圣东尼无缝针织机品牌，MES对应无缝针织生产模块"},
   {cn:"工厂人力资源系统", en:"FHIS", cat:"系统缩写", detail:"Factory Human Information System"},
   {cn:"财务报工系统", en:"FVB", cat:"系统缩写", detail:"新版SAP财务报工"},
   {cn:"旧版ERP", en:"CEN", cat:"系统缩写", detail:"老版SAP报工系统"},
@@ -883,40 +905,133 @@ const ALL_TERMS = [
   {cn:"印绣花部门", en:"VAP", cat:"系统缩写", detail:"Value Added Process (Printing & Embroidery)"},
 ];
 
-// ============== SRS STATE ==============
-let srsData = JSON.parse(localStorage.getItem('mes_srs_v2') || '{}');
-let studyStats = JSON.parse(localStorage.getItem('mes_stats_v2') || '{"today":0,"date":"","totalReviews":0,"correctReviews":0,"streak":0,"lastStudy":""}');
+// ============== USER MANAGEMENT ==============
+const USERS_LIST_KEY = 'mes_team_users';
+const LAST_USER_KEY = 'mes_last_user';
+let currentUser = '';
 
-let currentMode = 'review';
+function getUsers() {
+  let users = JSON.parse(localStorage.getItem(USERS_LIST_KEY) || '[]');
+  if (users.length === 0) { users = ['默认', 'User1', 'User2']; localStorage.setItem(USERS_LIST_KEY, JSON.stringify(users)); }
+  return users;
+}
+
+function saveUsers(users) { localStorage.setItem(USERS_LIST_KEY, JSON.stringify(users)); }
+
+function srsKey() { return 'mes_srs_' + currentUser; }
+function statsKey() { return 'mes_stats_' + currentUser; }
+
+function loadUserData(username) {
+  currentUser = username;
+  srsData = JSON.parse(localStorage.getItem(srsKey()) || '{}');
+  studyStats = JSON.parse(localStorage.getItem(statsKey()) || '{"today":0,"date":"","totalReviews":0,"correctReviews":0,"streak":0,"lastStudy":"","wrongWords":0}');
+  document.getElementById('userSelect').value = username;
+  setCat(currentCat);
+}
+
+function switchUser(username) {
+  saveUserData();
+  localStorage.setItem(LAST_USER_KEY, username);
+  loadUserData(username);
+}
+
+function addUserPrompt() {
+  const name = prompt('输入新用户名：');
+  if (!name || !name.trim()) return;
+  const users = getUsers();
+  if (users.includes(name.trim())) { alert('用户名已存在！'); return; }
+  users.push(name.trim());
+  saveUsers(users);
+  renderUserSelect();
+  switchUser(name.trim());
+}
+
+function renderUserSelect() {
+  const sel = document.getElementById('userSelect');
+  if (!sel) return;
+  const users = getUsers();
+  sel.innerHTML = users.map(u => `<option value="${u}" ${u===currentUser?'selected':''}>👤 ${u}</option>`).join('');
+}
+
+function deleteUser() {
+  if (!confirm('确定删除用户「' + currentUser + '」？所有学习数据将丢失！')) return;
+  const users = getUsers();
+  const idx = users.indexOf(currentUser);
+  if (idx > -1) {
+    localStorage.removeItem(srsKey());
+    localStorage.removeItem(statsKey());
+    users.splice(idx, 1);
+    saveUsers(users);
+    if (users.length === 0) users.push('默认');
+    loadUserData(users[0]);
+    renderUserSelect();
+  }
+}
+
+function saveUserData() {
+  if (!currentUser) return;
+  localStorage.setItem(srsKey(), JSON.stringify(srsData));
+  localStorage.setItem(statsKey(), JSON.stringify(studyStats));
+}
+
+// ============== MEGA CATEGORIES ==============
+const MEGA_CAT_MAP = {
+  '订单与计划':'📋 订单业务','船务物流':'📋 订单业务','产前':'📋 订单业务',
+  '工艺路线':'🧵 生产流程','拉布裁剪':'🧵 生产流程','车缝':'🧵 生产流程','洗水':'🧵 生产流程','后整包装':'🧵 生产流程','外发管理':'🧵 生产流程','STI无缝针织':'🧵 生产流程',
+  '服装面料':'🔥 裁剪烧菲','辅料':'🔥 裁剪烧菲','服装部位':'🔥 裁剪烧菲','烧菲发卡':'🔥 裁剪烧菲',
+  '品质管理':'✅ 品检设备','验针':'✅ 品检设备','设备管理':'✅ 品检设备','考勤与效率':'✅ 品检设备',
+  '系统缩写':'📖 系统常用','常见动词':'📖 系统常用','角色部门':'📖 系统常用','状态描述':'📖 系统常用','场景对话':'📖 系统常用','终端与系统':'📖 系统常用'
+};
+const MEGA_CAT_ORDER = ['全部','📋 订单业务','🧵 生产流程','🔥 裁剪烧菲','✅ 品检设备','📖 系统常用'];
+
+function getMegaCat(subCat) { return MEGA_CAT_MAP[subCat] || subCat; }
+
+function getMegaCats() {
+  return MEGA_CAT_ORDER;
+}
+
+function isTermInMegaCat(term, megaCat) {
+  if (megaCat === '全部') return true;
+  return getMegaCat(term.cat) === megaCat;
+}
+
+// ============== SRS STATE ==============
+let srsData = {};
+let studyStats = {};
+
+let currentMode = 'learn';
 let currentCat = '全部';
 let filteredTerms = [];
 let currentIndex = 0;
 let isFlipped = false;
-let autoPlay = localStorage.getItem('mes_autoplay') !== '0';
+let autoPlay = false; // 默认不自动发音，点🔊按钮才发音
 
 // ============== INIT ==============
 function init() {
-  // Reset streak if new day
   const today = new Date().toDateString();
+  // Init last used user
+  const users = getUsers();
+  const lastUser = localStorage.getItem(LAST_USER_KEY);
+  const startUser = lastUser && users.includes(lastUser) ? lastUser : users[0];
+  loadUserData(startUser);
   if (studyStats.date !== today) {
     if (studyStats.date) {
       const yesterday = new Date(Date.now() - 86400000).toDateString();
-      if (studyStats.lastStudy !== yesterday && studyStats.lastStudy !== today) {
-        studyStats.streak = 0;
-      }
+      if (studyStats.lastStudy !== yesterday && studyStats.lastStudy !== today) studyStats.streak = 0;
     }
     studyStats.today = 0;
     studyStats.date = today;
-    saveStats();
+    saveUserData();
   }
   if (localStorage.getItem('mes_dark_pro') === '1') document.body.classList.add('dark');
   document.getElementById('autoPlayToggle').classList.toggle('on', autoPlay);
+  renderUserSelect();
   setCat('全部');
 }
 
-// ============== SRS ALGORITHM (SM-2) ==============
+// ============== SRS ALGORITHM (SM-2 + Wrong Tracking) ==============
 function getSRS(idx) {
-  return srsData[idx] || { ease: 2.5, interval: 0, reps: 0, due: Date.now(), status: 'new' };
+  return srsData[idx] || { ease: 2.5, interval: 0, reps: 0, due: Date.now(), status: 'new', wrongCount: 0 };
 }
 
 function rateCard(idx, rating) {
@@ -924,17 +1039,20 @@ function rateCard(idx, rating) {
   const now = Date.now();
   const day = 86400000;
 
-  if (rating === 0) { // Again
+  if (rating === 0) { // Again → 答错，增加错题计数
     card.reps = 0;
     card.interval = 0;
-    card.due = now + 600000; // 10 minutes
+    card.due = now + 600000; // 10分钟
     card.status = 'learning';
+    card.wrongCount = (card.wrongCount || 0) + 1;
+    studyStats.wrongWords = (studyStats.wrongWords || 0) + 1;
   } else if (rating === 1) { // Hard
     card.reps = Math.max(1, card.reps);
     card.interval = card.interval === 0 ? 1 : Math.max(1, Math.round(card.interval * 1.2));
     card.ease = Math.max(1.3, card.ease - 0.15);
     card.due = now + card.interval * day;
     card.status = 'learning';
+    if (card.wrongCount > 0) card.wrongCount = Math.max(0, card.wrongCount - 1);
   } else if (rating === 2) { // Good
     card.reps++;
     if (card.reps === 1) card.interval = 1;
@@ -942,6 +1060,7 @@ function rateCard(idx, rating) {
     else card.interval = Math.round(card.interval * card.ease);
     card.due = now + card.interval * day;
     card.status = card.interval >= 21 ? 'review' : 'learning';
+    if (card.wrongCount > 0) card.wrongCount = Math.max(0, card.wrongCount - 1);
   } else if (rating === 3) { // Easy
     card.reps++;
     if (card.reps === 1) card.interval = 3;
@@ -949,26 +1068,19 @@ function rateCard(idx, rating) {
     card.ease = Math.min(2.8, card.ease + 0.15);
     card.due = now + card.interval * day;
     card.status = 'review';
+    if (card.wrongCount > 0) card.wrongCount = Math.max(0, card.wrongCount - 1);
   }
 
   if (card.interval >= 60) card.status = 'mastered';
   srsData[idx] = card;
-  localStorage.setItem('mes_srs_v2', JSON.stringify(srsData));
+  saveUserData();
 
-  // Update stats
   studyStats.today++;
   studyStats.totalReviews++;
   if (rating >= 2) studyStats.correctReviews++;
   studyStats.lastStudy = new Date().toDateString();
-  if (studyStats.lastStudy !== studyStats.date) {
-    studyStats.streak++;
-    studyStats.date = studyStats.lastStudy;
-  }
-  saveStats();
-}
-
-function saveStats() {
-  localStorage.setItem('mes_stats_v2', JSON.stringify(studyStats));
+  if (studyStats.lastStudy !== studyStats.date) { studyStats.streak++; studyStats.date = studyStats.lastStudy; }
+  saveUserData();
 }
 
 function isDue(idx) {
@@ -978,82 +1090,64 @@ function isDue(idx) {
 
 function getDueIndices() {
   return ALL_TERMS.map((_, i) => i).filter(i => {
-    if (currentCat !== '全部' && ALL_TERMS[i].cat !== currentCat) return false;
+    if (currentCat !== '全部' && !isTermInMegaCat(ALL_TERMS[i], currentCat)) return false;
     return isDue(i);
   });
 }
 
-// ============== AUDIO ==============
+function getWrongIndices() {
+  const wrongs = [];
+  ALL_TERMS.forEach((t, i) => {
+    if (currentCat !== '全部' && !isTermInMegaCat(t, currentCat)) return;
+    const srs = getSRS(i);
+    if (srs.wrongCount > 0) wrongs.push(i);
+  });
+  return wrongs;
+}
+
+// ============== AUDIO (已完全禁用) ==============
 function playAudio(idx) {
-  const player = document.getElementById('audioPlayer');
-  const btn = document.querySelector('.audio-btn');
-  if (btn) { btn.classList.add('playing'); setTimeout(() => btn.classList.remove('playing'), 500); }
-
-  // Try cached audio first
+  if (idx < 0 || idx >= ALL_TERMS.length) return;
+  const player = document.getElementById("audioPlayer");
+  const btn = document.querySelector(".audio-btn");
+  if (btn) { btn.classList.add("playing"); setTimeout(() => btn.classList.remove("playing"), 500); }
   const cachedUrl = audioCache.get(String(idx));
-  if (cachedUrl) {
-    player.src = cachedUrl;
-    player.play().catch(() => {});
-    return;
-  }
-
-  // If audio pack not loaded yet, try loading it first
+  if (cachedUrl) { player.src = cachedUrl; player.play().catch(() => {}); return; }
   if (!audioPackLoaded && !audioPackLoading) {
     loadAudioPack().then(() => {
       const url = audioCache.get(String(idx));
       if (url) { player.src = url; player.play().catch(() => {}); }
-      else { fallbackTTS(idx); }
     });
     return;
-  }
-
-  // Fallback: use browser TTS
-  fallbackTTS(idx);
-}
-
-function fallbackTTS(idx) {
-  if (idx < 0 || idx >= ALL_TERMS.length) return;
-  const text = ALL_TERMS[idx].en.replace(/\s*\([^)]*\)/g, '');
-  if ('speechSynthesis' in window) {
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = 'en-US';
-    utter.rate = 0.9;
-    speechSynthesis.cancel();
-    speechSynthesis.speak(utter);
   }
 }
 
 function toggleAutoPlay() {
   autoPlay = !autoPlay;
-  localStorage.setItem('mes_autoplay', autoPlay ? '1' : '0');
-  document.getElementById('autoPlayToggle').classList.toggle('on', autoPlay);
-}
-
-// ============== CATEGORIES ==============
-function getCategories() {
-  const cats = ['全部', ...new Set(ALL_TERMS.map(t => t.cat))];
-  const order = ['全部','订单与计划','工艺路线','服装面料','辅料','服装部位','拉布裁剪','车缝','洗水','烧菲发卡','品质管理','验针','后整包装','外发管理','设备管理','考勤与效率','产前','STI无缝针织','船务物流','终端与系统','常见动词','角色部门','状态描述','场景对话','系统缩写'];
-  return order.filter(c => cats.includes(c)).concat(cats.filter(c => !order.includes(c)));
+  localStorage.setItem("mes_autoplay", autoPlay ? "1" : "0");
+  document.getElementById("autoPlayToggle").classList.toggle("on", autoPlay);
 }
 
 function renderCatFilter() {
   const el = document.getElementById('catFilter');
-  el.innerHTML = getCategories().map(c =>
+  el.innerHTML = getMegaCats().map(c =>
     `<button class="cat-btn ${c===currentCat?'active':''}" onclick="setCat('${c.replace(/'/g,"\\'")}')">${c}</button>`
   ).join('');
 }
 
 function setCat(cat) {
   currentCat = cat;
-  if (currentMode === 'review') {
+  if (currentMode === 'wrong') {
+    filteredTerms = getWrongIndices().map(i => ({...ALL_TERMS[i], _idx: i}));
+  } else if (currentMode === 'learn') {
     filteredTerms = getDueIndices().map(i => ({...ALL_TERMS[i], _idx: i}));
     if (filteredTerms.length === 0) {
       filteredTerms = ALL_TERMS.map((t,i) => ({...t, _idx: i}));
-      if (cat !== '全部') filteredTerms = filteredTerms.filter(t => t.cat === cat);
+      if (cat !== '全部') filteredTerms = filteredTerms.filter(t => isTermInMegaCat(t, cat));
     }
   } else {
-    if (cat === '全部') filteredTerms = ALL_TERMS.map((t,i) => ({...t, _idx: i}));
-    else filteredTerms = ALL_TERMS.map((t,i) => ({...t, _idx: i})).filter(t => t.cat === cat);
+    filteredTerms = ALL_TERMS.map((t,i) => ({...t, _idx: i}));
+    if (cat !== '全部') filteredTerms = filteredTerms.filter(t => isTermInMegaCat(t, cat));
   }
   renderCatFilter();
   currentIndex = 0;
@@ -1066,8 +1160,8 @@ function setCat(cat) {
 function setMode(mode) {
   currentMode = mode;
   isFlipped = false;
+  const modes = ['learn','cn2en','en2cn','spell','quiz','wrong','table'];
   document.querySelectorAll('.mode-btn').forEach((b, i) => {
-    const modes = ['review','cn2en','en2cn','spell','quiz','table'];
     b.classList.toggle('active', modes[i] === mode);
   });
   document.getElementById('searchBox').style.display = mode === 'table' ? 'block' : 'none';
@@ -1077,24 +1171,21 @@ function setMode(mode) {
 
 // ============== SHUFFLE ==============
 function shuffleCards() {
-  for (let i = filteredTerms.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [filteredTerms[i], filteredTerms[j]] = [filteredTerms[j], filteredTerms[i]];
-  }
-  currentIndex = 0;
-  isFlipped = false;
-  renderCurrentCard();
+  for (let i = filteredTerms.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i+1)); [filteredTerms[i], filteredTerms[j]] = [filteredTerms[j], filteredTerms[i]]; }
+  currentIndex = 0; isFlipped = false; renderCurrentCard();
 }
 
 // ============== STATS ==============
 function updateStats() {
   const due = getDueIndices().length;
   const learned = ALL_TERMS.map((_,i) => i).filter(i => getSRS(i).status === 'mastered').length;
+  const wrongCount = getWrongIndices().length;
   const pct = Math.round(learned / ALL_TERMS.length * 100);
   document.getElementById('statDue').textContent = due;
-  document.getElementById('statToday').textContent = studyStats.today;
-  document.getElementById('statStreak').textContent = studyStats.streak;
+  document.getElementById('statToday').textContent = studyStats.today || 0;
+  document.getElementById('statStreak').textContent = studyStats.streak || 0;
   document.getElementById('statLearned').textContent = learned;
+  document.getElementById('statWrong').textContent = wrongCount;
   document.getElementById('progressBar').style.width = pct + '%';
   document.getElementById('progressText').textContent = pct + '% 已掌握 (' + learned + '/' + ALL_TERMS.length + ')';
 }
@@ -1102,7 +1193,10 @@ function updateStats() {
 // ============== RENDER ==============
 function renderCurrentCard() {
   if (filteredTerms.length === 0) {
-    document.getElementById('contentArea').innerHTML = '<div style="text-align:center;padding:60px 20px;color:var(--text2)"><div style="font-size:48px;margin-bottom:16px;">🎉</div><h3>没有词汇</h3><p>当前分类没有词汇</p></div>';
+    const msg = currentMode === 'wrong' ?
+      '<div class="empty-state"><div class="icon">🎉</div><h3>错题已清空！</h3><p>当前没有需要复习的错题。<br>继续复习新词汇吧！</p><button class="btn btn-primary" style="margin-top:12px;" onclick="setMode(\'review\')">去复习</button></div>' :
+      '<div class="empty-state"><div class="icon">📭</div><h3>没有词汇</h3><p>当前分类没有词汇</p></div>';
+    document.getElementById('contentArea').innerHTML = msg;
     document.getElementById('navPos').textContent = '';
     return;
   }
@@ -1119,15 +1213,17 @@ function renderCurrentCard() {
 
   let frontHtml = '<div class="card-face card-front">';
   frontHtml += '<button class="audio-btn" onclick="event.stopPropagation();playAudio(' + idx + ')">🔊</button>';
-  frontHtml += '<div class="card-category"><span>📂 ' + term.cat + '</span><span class="srs-badge ' + srs.status + '">' + srsLabel(srs) + '</span></div>';
+  const wrongLabel = srs.wrongCount > 0 ? `<span class="wrong-badge">错${srs.wrongCount}</span>` : '';
+  frontHtml += '<div class="card-category"><span>📂 ' + term.cat + '</span><span><span class="srs-badge ' + srs.status + '">' + srsLabel(srs) + '</span>' + wrongLabel + '</span></div>';
 
   let backHtml = '<div class="card-face card-back">';
   backHtml += '<button class="audio-btn" onclick="event.stopPropagation();playAudio(' + idx + ')">🔊</button>';
   backHtml += '<div class="card-category"><span>📂 ' + term.cat + '</span><span>' + (currentIndex+1) + '/' + filteredTerms.length + '</span></div>';
 
-  if (currentMode === 'review' || currentMode === 'cn2en') {
+  const showWrongHint = currentMode === 'wrong' ? ' · 这是你的错题' : '';
+  if (currentMode === 'learn' || currentMode === 'cn2en' || currentMode === 'wrong') {
     frontHtml += '<div class="card-question">' + term.cn + '</div>';
-    frontHtml += '<div class="card-hint">👆 点击翻转 · 看中文说英文</div>';
+    frontHtml += '<div class="card-hint">👆 点击翻转 · 看中文说英文' + showWrongHint + '</div>';
     backHtml += '<div class="card-answer">' + term.en + '</div>';
     backHtml += '<div class="card-detail">' + term.detail + '</div>';
   } else if (currentMode === 'en2cn') {
@@ -1140,36 +1236,24 @@ function renderCurrentCard() {
     frontHtml += '<div class="card-hint">输入英文拼写，按回车核对</div>';
     frontHtml += '<div class="card-body"><input class="spelling-input" id="spellInput" placeholder="输入英文..." autocomplete="off" onkeydown="if(event.key==\'Enter\')checkSpell()" onclick="event.stopPropagation()"><div class="feedback" id="spellFeedback"></div></div>';
     backHtml += '<div class="card-answer" style="font-size:20px;">' + term.en.split(' (')[0] + '</div>';
-    backHtml += '<div class="card-detail">中文：' + term.cn + '</div>';
-    backHtml += '<div class="card-detail">' + term.detail + '</div>';
+    backHtml += '<div class="card-detail">中文：' + term.cn + '</div><div class="card-detail">' + term.detail + '</div>';
   }
   frontHtml += '</div>';
   backHtml += '<div class="card-hint">👆 点击翻回</div></div>';
 
   let html = '<div class="flashcard-wrap"><div class="flashcard' + (isFlipped?' flipped':'') + '" onclick="toggleFlip()">' + frontHtml + backHtml + '</div></div>';
 
-  // SRS rating buttons (only in review mode)
-  if (currentMode === 'review' && isFlipped) {
+  if ((currentMode === 'learn' || currentMode === 'wrong') && isFlipped) {
     html += '<div class="difficulty-bar">';
     html += '<button class="diff-btn diff-again" onclick="rateAndNext(' + idx + ',0)">🔴 忘了</button>';
-    html += '<button class="diff-btn diff-hard" onclick="rateAndNext(' + idx + ',1)">🟡 困难</button>';
-    html += '<button class="diff-btn diff-good" onclick="rateAndNext(' + idx + ',2)">🟢 良好</button>';
-    html += '<button class="diff-btn diff-easy" onclick="rateAndNext(' + idx + ',3)">⭐ 简单</button>';
+    html += '<button class="diff-btn diff-hard" onclick="rateAndNext(' + idx + ',1)">🟡 模糊</button>';
+    html += '<button class="diff-btn diff-good" onclick="rateAndNext(' + idx + ',2)">🟢 记得</button>';
     html += '</div>';
   }
 
   document.getElementById('contentArea').innerHTML = html;
-
-  // Auto play audio
-  if (autoPlay && !isFlipped) {
-    setTimeout(() => playAudio(idx), 300);
-  }
-
-  // Focus spell input
-  if (currentMode === 'spell' && !isFlipped) {
-    const inp = document.getElementById('spellInput');
-    if (inp) inp.focus();
-  }
+  if (autoPlay && !isFlipped) setTimeout(() => playAudio(idx), 300);
+  if (currentMode === 'spell' && !isFlipped) { const inp = document.getElementById('spellInput'); if (inp) inp.focus(); }
   updateStats();
 }
 
@@ -1181,28 +1265,17 @@ function srsLabel(srs) {
 // ============== FLIP ==============
 function toggleFlip() {
   if (currentMode === 'table' || currentMode === 'quiz') return;
-  if (currentMode === 'spell' && !isFlipped) {
-    const inp = document.getElementById('spellInput');
-    if (inp && document.activeElement === inp) return;
-  }
+  if (currentMode === 'spell' && !isFlipped) { const inp = document.getElementById('spellInput'); if (inp && document.activeElement === inp) return; }
   isFlipped = !isFlipped;
   renderCurrentCard();
-  // Play audio when flipped to back (showing English)
-  if (isFlipped && autoPlay) {
-    const term = filteredTerms[currentIndex];
-    if (term) setTimeout(() => playAudio(term._idx), 300);
-  }
+  if (isFlipped && autoPlay) { const term = filteredTerms[currentIndex]; if (term) setTimeout(() => playAudio(term._idx), 300); }
 }
 
 // ============== RATE AND NEXT ==============
 function rateAndNext(idx, rating) {
   rateCard(idx, rating);
-  // In review mode, get next due card
-  if (currentMode === 'review') {
-    const due = getDueIndices();
-    if (due.length > 0) {
-      filteredTerms = due.map(i => ({...ALL_TERMS[i], _idx: i}));
-    }
+  if (currentMode === 'wrong') {
+    filteredTerms = getWrongIndices().map(i => ({...ALL_TERMS[i], _idx: i}));
   }
   isFlipped = false;
   nextCard();
@@ -1210,83 +1283,51 @@ function rateAndNext(idx, rating) {
 
 // ============== SPELL CHECK ==============
 function checkSpell() {
-  const inp = document.getElementById('spellInput');
-  const fb = document.getElementById('spellFeedback');
+  const inp = document.getElementById('spellInput'); const fb = document.getElementById('spellFeedback');
   if (!inp || !fb) return;
-  const answer = inp.value.trim().toLowerCase();
-  if (!answer) return;
+  const answer = inp.value.trim().toLowerCase(); if (!answer) return;
   const term = filteredTerms[currentIndex];
   const correct = term.en.split(' (')[0].toLowerCase();
   if (answer === correct || answer.replace(/[^a-z0-9]/g,'') === correct.replace(/[^a-z0-9]/g,'')) {
-    inp.className = 'spelling-input correct';
-    fb.className = 'feedback correct';
-    fb.textContent = '✅ 正确！';
+    inp.className = 'spelling-input correct'; fb.className = 'feedback correct'; fb.textContent = '✅ 正确！';
     playAudio(term._idx);
-    setTimeout(() => { if (currentMode === 'review') rateAndNext(term._idx, 2); else nextCard(); }, 1000);
+    setTimeout(() => { if (currentMode === 'learn' || currentMode === 'wrong') rateAndNext(term._idx, 2); else nextCard(); }, 1000);
   } else {
-    inp.className = 'spelling-input wrong';
-    fb.className = 'feedback wrong';
-    fb.textContent = '❌ 再想想！（点击卡片看答案）';
+    inp.className = 'spelling-input wrong'; fb.className = 'feedback wrong'; fb.textContent = '❌ 再想想！（点击卡片看答案）';
   }
 }
 
 // ============== QUIZ MODE ==============
 function renderQuiz() {
-  const term = filteredTerms[currentIndex];
-  const idx = term._idx;
+  const term = filteredTerms[currentIndex]; const idx = term._idx;
   const showEn = Math.random() > 0.5;
   const correctAnswer = showEn ? term.en : term.cn;
   const question = showEn ? term.cn : term.en;
   const questionLabel = showEn ? '看中文，选英文' : '看英文，选中文';
-
-  // Generate 3 wrong options from same category or random
   let pool = ALL_TERMS.map((t,i) => ({...t, _idx: i})).filter(t => t._idx !== idx);
-  if (currentCat !== '全部') {
-    const sameCat = pool.filter(t => t.cat === term.cat);
-    if (sameCat.length >= 3) pool = sameCat;
-  }
-  // Shuffle and pick 3
-  for (let i = pool.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [pool[i], pool[j]] = [pool[j], pool[i]];
-  }
+  if (currentCat !== '全部') { const sameCat = pool.filter(t => isTermInMegaCat(t, currentCat)); if (sameCat.length >= 3) pool = sameCat; }
+  for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i+1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
   const wrongOptions = pool.slice(0, 3).map(t => showEn ? t.en : t.cn);
   const options = [correctAnswer, ...wrongOptions];
-  // Shuffle options
-  for (let i = options.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [options[i], options[j]] = [options[j], options[i]];
-  }
-
+  for (let i = options.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i+1)); [options[i], options[j]] = [options[j], options[i]]; }
   let html = '<div style="text-align:center;margin-bottom:16px;"><span class="srs-badge ' + getSRS(idx).status + '">' + srsLabel(getSRS(idx)) + '</span> <span style="font-size:12px;color:var(--text2)">🎯 ' + questionLabel + '</span></div>';
   html += '<div style="background:var(--card-bg);padding:30px 20px;border-radius:20px;box-shadow:var(--shadow);text-align:center;margin-bottom:16px;">';
   html += '<div style="font-size:24px;font-weight:800;">' + question + '</div>';
-  html += '<button class="audio-btn" style="position:relative;display:inline-flex;margin-top:16px;" onclick="playAudio(' + idx + ')">🔊 听发音</button>';
-  html += '</div>';
-  options.forEach(opt => {
-    const isCorrect = opt === correctAnswer;
-    html += `<div class="quiz-option" onclick="quizAnswer(this,${isCorrect},${idx})">${opt}</div>`;
-  });
+  html += '<button class="audio-btn" style="position:relative;display:inline-flex;margin-top:16px;" onclick="playAudio(' + idx + ')">🔊 听发音</button></div>';
+  options.forEach(opt => { const isCorrect = opt === correctAnswer; html += '<div class="quiz-option" onclick="quizAnswer(this,' + isCorrect + ',' + idx + ')">' + opt + '</div>'; });
   html += '<div id="quizFeedback" style="text-align:center;margin-top:12px;font-size:14px;font-weight:600;"></div>';
   document.getElementById('contentArea').innerHTML = html;
   if (autoPlay) setTimeout(() => playAudio(idx), 300);
 }
 
 function quizAnswer(el, isCorrect, idx) {
-  const options = document.querySelectorAll('.quiz-option');
-  options.forEach(o => o.classList.add('disabled'));
+  document.querySelectorAll('.quiz-option').forEach(o => o.classList.add('disabled'));
   const fb = document.getElementById('quizFeedback');
-  if (isCorrect) {
-    el.classList.add('correct');
-    fb.textContent = '✅ 正确！';
-    fb.style.color = 'var(--success)';
-    rateCard(idx, 2);
-  } else {
+  if (isCorrect) { el.classList.add('correct'); fb.textContent = '✅ 正确！'; fb.style.color = 'var(--success)'; rateCard(idx, 2); }
+  else {
     el.classList.add('wrong');
-    options.forEach(o => { if (o.textContent === filteredTerms[currentIndex].en || o.textContent === filteredTerms[currentIndex].cn) o.classList.add('correct'); });
-    fb.textContent = '❌ 错了，正确答案已标绿';
-    fb.style.color = 'var(--danger)';
-    rateCard(idx, 0);
+    document.querySelectorAll('.quiz-option').forEach(o => { if (o.textContent === filteredTerms[currentIndex].en || o.textContent === filteredTerms[currentIndex].cn) o.classList.add('correct'); });
+    fb.textContent = '❌ 错了，正确答案已标绿'; fb.style.color = 'var(--danger)'; rateCard(idx, 0);
   }
   setTimeout(() => { isFlipped = false; nextCard(); }, 1500);
 }
@@ -1296,12 +1337,12 @@ function renderTable() {
   const q = document.getElementById('searchBox').value.toLowerCase();
   let terms = filteredTerms;
   if (q) terms = terms.filter(t => t.cn.includes(q) || t.en.toLowerCase().includes(q) || t.cat.includes(q));
-  let html = '<div class="table-wrap"><table>';
-  html += '<tr><th>中文</th><th>English</th><th>分类</th><th>状态</th><th>🔊</th></tr>';
+  let html = '<div class="table-wrap"><table><tr><th>中文</th><th>English</th><th>分类</th><th>状态</th><th>错题</th><th>🔊</th></tr>';
   terms.forEach(t => {
     const srs = getSRS(t._idx);
     const statusIcons = { new:'⬜', learning:'🟡', review:'🟢', mastered:'✅' };
-    html += `<tr><td><strong>${t.cn}</strong></td><td>${t.en}</td><td><span class="table-cat">${t.cat}</span></td><td style="text-align:center">${statusIcons[srs.status]}</td><td style="text-align:center;cursor:pointer" onclick="playAudio(${t._idx})">🔊</td></tr>`;
+    const wrongBadge = srs.wrongCount > 0 ? '<span style="color:var(--danger);font-weight:700;">✖' + srs.wrongCount + '</span>' : '—';
+    html += '<tr><td><strong>' + t.cn + '</strong></td><td>' + t.en + '</td><td><span class="table-cat">' + t.cat + '</span></td><td style="text-align:center">' + statusIcons[srs.status] + '</td><td style="text-align:center">' + wrongBadge + '</td><td style="text-align:center;cursor:pointer" onclick="playAudio(' + t._idx + ')">🔊</td></tr>';
   });
   html += '</table></div>';
   if (terms.length === 0) html = '<div style="text-align:center;padding:40px;color:var(--text2)">没有匹配的词汇</div>';
@@ -1309,35 +1350,16 @@ function renderTable() {
 }
 
 // ============== NAV ==============
-function nextCard() {
-  if (currentIndex < filteredTerms.length - 1) currentIndex++;
-  else currentIndex = 0;
-  isFlipped = false;
-  renderCurrentCard();
-}
-function prevCard() {
-  if (currentIndex > 0) currentIndex--;
-  else currentIndex = filteredTerms.length - 1;
-  isFlipped = false;
-  renderCurrentCard();
-}
+function nextCard() { if (currentIndex < filteredTerms.length - 1) currentIndex++; else currentIndex = 0; isFlipped = false; renderCurrentCard(); }
+function prevCard() { if (currentIndex > 0) currentIndex--; else currentIndex = filteredTerms.length - 1; isFlipped = false; renderCurrentCard(); }
 
 // ============== DARK ==============
-function toggleDark() {
-  document.body.classList.toggle('dark');
-  localStorage.setItem('mes_dark_pro', document.body.classList.contains('dark') ? '1' : '0');
-}
+function toggleDark() { document.body.classList.toggle('dark'); localStorage.setItem('mes_dark_pro', document.body.classList.contains('dark') ? '1' : '0'); }
 
 // ============== TOUCH SWIPE ==============
 let touchStartX = 0, touchEndX = 0;
 document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
-document.addEventListener('touchend', e => {
-  touchEndX = e.changedTouches[0].screenX;
-  const diff = touchStartX - touchEndX;
-  if (Math.abs(diff) > 80) {
-    if (diff > 0) nextCard(); else prevCard();
-  }
-});
+document.addEventListener('touchend', e => { touchEndX = e.changedTouches[0].screenX; const diff = touchStartX - touchEndX; if (Math.abs(diff) > 80) { if (diff > 0) nextCard(); else prevCard(); } });
 
 // ============== KEYBOARD ==============
 document.addEventListener('keydown', e => {
@@ -1356,3 +1378,6 @@ init();
 </script>
 </body>
 </html>
+
+
+
