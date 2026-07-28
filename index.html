@@ -245,7 +245,7 @@ const ALL_TERMS = [
   {cn:"制单", en:"MES Order (MO)", cat:"订单与计划", detail:"工厂视角的生产组织单元，一个SO可按颜色/货期拆成多个MO"},
   {cn:"工单", en:"Shop Order", cat:"订单与计划", detail:"车间视角的最小排产单元，一个MO按幅位拆成多个工单"},
   {cn:"三层订单体系", en:"Three-tier Order (SO→MO→Shop Order)", cat:"订单与计划", detail:"MES中1:N:N的订单分层体系：销售订单→制单→工单"},
-  {cn:"套装", en:"Set / Ensemble", cat:"订单与计划", detail:"多件衣服搭配成套销售，如上衣+裤子+内衣"},
+  {cn:"套装", en:"Set", cat:"订单与计划", detail:"多件衣服搭配成套销售，如上衣+裤子+内衣"},
   {cn:"套装组件", en:"Component", cat:"订单与计划", detail:"套装中的单件组件，编号为C1、C2、C3等"},
   {cn:"拆分规则", en:"Splitting Rule", cat:"订单与计划", detail:"MO生成规则，决定一个SO按PO/颜色/货期等拆成多个MO"},
   {cn:"采购订单", en:"Purchase Order (PO)", cat:"订单与计划", detail:"客户下达的采购订单，是SO的上游单据"},
@@ -473,7 +473,7 @@ const ALL_TERMS = [
   {cn:"边缘缝线", en:"Edgestitch", cat:"车缝", detail:"紧贴边缘的缝线"},
   {cn:"暗缝线", en:"Understitch", cat:"车缝", detail:"在贴边内侧以防止外翻的缝线"},
   {cn:"链缝", en:"Chain Stitch", cat:"车缝", detail:"链式线迹，一面是直线一面是链条"},
-  {cn:"碎褶", en:"Gather / Shirring", cat:"车缝", detail:"将布料抽褶形成蓬松效果"},
+  {cn:"碎褶", en:"Gather", cat:"车缝", detail:"将布料抽褶形成蓬松效果"},
   {cn:"缝份", en:"Seam Allowance", cat:"车缝", detail:"缝合线到布边的距离"},
   {cn:"下摆缝", en:"Hemming", cat:"车缝", detail:"折叠缝合衣服底部边缘"},
   {cn:"上橡筋", en:"Elastic Setting", cat:"车缝", detail:"将松紧带缝入腰头或袖口"},
@@ -496,7 +496,7 @@ const ALL_TERMS = [
   {cn:"硅油处理", en:"Silicone Softener", cat:"洗水", detail:"用硅油柔软剂处理面料"},
   {cn:"防缩处理", en:"Anti-shrinkage Treatment", cat:"洗水", detail:"减少面料缩水率的处理"},
   {cn:"定型/热定型", en:"Heat Setting", cat:"洗水", detail:"通过加热使面料定型"},
-  {cn:"脱水", en:"Hydro-extraction / Spin Drying", cat:"洗水", detail:"用离心力去除布料水分"},
+  {cn:"脱水", en:"Spin Drying", cat:"洗水", detail:"用离心力去除布料水分"},
   {cn:"烘干", en:"Tumble Dry / Drying", cat:"洗水", detail:"用烘干机干燥衣物"},
   {cn:"洗水机", en:"Washing Machine / Washer-extractor", cat:"洗水", detail:"工业洗水设备"},
   {cn:"烘干机", en:"Drying Machine / Tumbler", cat:"洗水", detail:"工业烘干设备"},
@@ -1288,7 +1288,12 @@ function checkSpell() {
   const answer = inp.value.trim().toLowerCase(); if (!answer) return;
   const term = filteredTerms[currentIndex];
   const correct = term.en.split(' (')[0].toLowerCase();
-  if (answer === correct || answer.replace(/[^a-z0-9]/g,'') === correct.replace(/[^a-z0-9]/g,'')) {
+  // 拆分 "/" 分隔的多个正确答案，只写一个也给对
+  const correctParts = correct.split(/\s*\/\s*/).map(s => s.trim().replace(/[^a-z0-9]/g,''));
+  const answerClean = answer.replace(/[^a-z0-9]/g,'');
+  const isCorrect = correctParts.some(p => p === answerClean) ||
+                    correct.replace(/[^a-z0-9]/g,'') === answerClean;
+  if (isCorrect) {
     inp.className = 'spelling-input correct'; fb.className = 'feedback correct'; fb.textContent = '✅ 正确！';
     playAudio(term._idx);
     setTimeout(() => { if (currentMode === 'learn' || currentMode === 'wrong') rateAndNext(term._idx, 2); else nextCard(); }, 1000);
