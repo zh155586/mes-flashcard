@@ -1105,12 +1105,26 @@ function getWrongIndices() {
   return wrongs;
 }
 
-// ============== AUDIO (已完全禁用) ==============
+// ============== AUDIO (zip + TTS fallback) ==============
+// 这些词的文字被修正过，audio.zip还是旧录音 → 用TTS念当前文字
+const TTS_OVERRIDE = [4,149,158,159,211,241,253,259,264,285,328,414,438,441,442,238];
 function playAudio(idx) {
   if (idx < 0 || idx >= ALL_TERMS.length) return;
-  const player = document.getElementById("audioPlayer");
   const btn = document.querySelector(".audio-btn");
   if (btn) { btn.classList.add("playing"); setTimeout(() => btn.classList.remove("playing"), 500); }
+
+  // 文字已修正但音频还是旧版 → 用浏览器TTS念当前文字
+  if (TTS_OVERRIDE.includes(idx)) {
+    speechSynthesis.cancel();
+    const text = ALL_TERMS[idx].en.replace(/\([^)]*\)/g, '').replace(/\//g, ' ').trim();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US'; u.rate = 0.85;
+    speechSynthesis.speak(u);
+    return;
+  }
+
+  // 其余词用audio.zip
+  const player = document.getElementById("audioPlayer");
   const cachedUrl = audioCache.get(String(idx));
   if (cachedUrl) { player.src = cachedUrl; player.play().catch(() => {}); return; }
   if (!audioPackLoaded && !audioPackLoading) {
